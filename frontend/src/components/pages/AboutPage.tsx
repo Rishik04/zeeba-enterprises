@@ -1,21 +1,17 @@
 import { Award, Shield, Target, Users, Zap } from 'lucide-react';
-import chairman from "../../assets/chairman.jpeg";
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
-import railway from "../../assets/railway1.jpeg";
+import chairman from "../../assets/chairman.jpeg";
+import cpm from "../../assets/cpm.jpeg";
+import railway from "../../assets/rail.png";
+import mining from "../../assets/mining.png";
+
 
 
 interface AboutPageProps {
   onNavigate: (page: string) => void;
-}
-interface Teams {
-  name: String,
-  role: String,
-  experience: String,
-  description: String,
-  photo: String
 }
 
 export function AboutPage({ onNavigate }: AboutPageProps) {
@@ -42,7 +38,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
     }
   ];
 
-  const team: [Teams] = [
+  const team = [
     {
       name: 'Sahbaz Anwar',
       role: 'Chairman',
@@ -50,13 +46,13 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
       description: 'A visionary leader with extensive experience in infrastructure projects, guiding Zeba Enterprises with a commitment to quality and innovation.',
       photo: chairman
     },
-    {
-      name: 'Priya Singh',
-      role: 'Chief Project Manager',
-      experience: '15+ years',
-      description: 'Expert in managing large-scale civil and railway projects, ensuring timely and budget-compliant delivery.',
-      photo: ""
-    },
+    // {
+    //   name: 'Nagesh Kumar',
+    //   role: 'Chief Project Manager',
+    //   experience: '10+ years',
+    //   description: 'Expert in managing large-scale civil and railway projects, ensuring timely and budget-compliant delivery.',
+    //   photo: cpm
+    // },
   ];
 
   const certifications = [
@@ -113,7 +109,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
             <div className="relative">
               <ImageWithFallback
                 // Recommended image: Page 3 of PDF (Handshake over blueprints)
-                src="https://images.unsplash.com/photo-1556156653-e5a7c69cc263?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBibHVlcHJpbnQlMjBhcmNoaXRlY3R1cmV8ZW58MXx8fHwxNzU4NzQ3ODY4fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                src={mining}
                 alt="Construction blueprints and planning"
                 className="w-full h-96 object-cover rounded-lg shadow-xl"
               />
@@ -160,13 +156,13 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
               Our qualified and professional team ensures precise execution in every project, maintaining the highest standards of efficiency and excellence.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className=" gap-8 justify-center">
             {team.map((member, index) => (
               <Card key={index} className="text-center">
                 <CardContent className="p-6">
-                  <div className="w-24 h-24 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                  <div className="w-50 h-50 rounded-full mx-auto mb-4 flex items-center justify-center overflow-hidden">
                     {/* <Users className="w-12 h-12 text-white" /> */}
-                    <img src={`${member.photo}`} alt="photo" className='w-full h-full object-cover rounded-full' />
+                    <ImageWithFallback src={member.photo} className='w-full h-full object-cover rounded-full' style={{objectPosition: "50% 10%"}} />
                   </div>
                   <h3 className="font-bold mb-2">{member.name}</h3>
                   <p className="text-cyan-600 font-medium mb-2">{member.role}</p>

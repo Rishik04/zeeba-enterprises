@@ -5,6 +5,7 @@ import { Badge } from '../ui/badge';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import { ArrowRight, Star, Users, Calendar, Shield, TrendingUp, Building2, Truck, Crown, Wrench } from 'lucide-react';
 import { motion } from 'motion/react';
+import rail from "../../assets/rail.png"
 
 interface HomePageProps {
   onNavigate: (page: string) => void;
@@ -15,8 +16,8 @@ function ConstructionSlideshow() {
   const [currentImage, setCurrentImage] = useState(0);
 
   const constructionImages = [
-    { url: "https://images.unsplash.com/photo-1608627732420-f743aee4c80c?crop=entropy&cs=tinysrgb&fit=max&q=80&w=1080", label: "Railways & Metro" },
-    { url: "https://images.unsplash.com/photo-1605865051326-81f3fcaf03b1?crop=entropy&cs=tinysrgb&fit=max&q=80&w=1080", label: "Roadways & Highways" },
+    { url: rail, label: "Railways & Metro" },
+    { url: "https://images.unsplash.com/photo-1667604579449-14298726118b?crop=entropy&cs=tinysrgb&fit=max&q=80&w=1080", label: "Roadways & Highways" },
     { url: "https://images.unsplash.com/photo-1580664031752-0f1379ea4de2?crop=entropy&cs=tinysrgb&fit=max&q=80&w=1080", label: "Mining Projects" },
     { url: "https://images.unsplash.com/photo-1667604579449-14298726118b?crop=entropy&cs=tinysrgb&fit=max&q=80&w=1080", label: "Civil & Building Works" }
   ];
@@ -101,9 +102,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
       {/* Hero */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-primary">
-          <video className="w-full h-full object-cover" autoPlay muted loop playsInline>
-            <source src="https://cdn.pixabay.com/video/2022/03/06/110650-683039808_large.mp4" type="video/mp4" />
-          </video>
+          {/* <video className="w-full h-full object-cover" autoPlay muted loop playsInline>
+            <source src="https://cdn.pixabay.com/video/2016/07/25/3992-176171691_large.mp4" type="video/mp4" />
+          </video> */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-slate-900/70 to-blue-900/80"></div>
         </div>
         <ConstructionSlideshow />
@@ -118,10 +119,10 @@ export function HomePage({ onNavigate }: HomePageProps) {
             building sustainable progress across India.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button size="lg" onClick={() => onNavigate('contact')} className="bg-cyan-500 px-10 py-4 text-lg text-sm">
+            <Button size="lg" onClick={() => onNavigate('contact')} className="bg-cyan-500 px-10 py-4 text-lg text-sm cursor-pointer">
               Start Your Project <ArrowRight className="ml-3 w-6 h-6" />
             </Button>
-            <Button size="lg" variant="outline" onClick={() => onNavigate('projects')} className="border-2 border-white hover:bg-white hover:text-primary px-10 py-4 text-lg">
+            <Button size="lg" variant="outline" onClick={() => onNavigate('projects')} className="border-2 border-white hover:bg-white hover:text-primary px-10 py-4 text-lg cursor-pointer">
               View Projects
             </Button>
           </div>
