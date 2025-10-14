@@ -23,9 +23,13 @@ interface ContactPageProps {
   onNavigate: (page: string) => void;
 }
 
+const TEMPLATE_ID = import.meta.env.VITE_EMAIL_TEMPLATE_ID;
+const SERVICE_ID = import.meta.env.VITE_EMAIL_SERVICE_ID;
+const PUBLIC_KEY = import.meta.env.VITE_EMAIL_PUBLIC_KEY;
+
 export function ContactPage({ onNavigate }: ContactPageProps) {
   const form = useRef();
-  const [projectType, setProjectType] = useState('Select project type');
+  const [projectType, setProjectType] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,17 +53,16 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
       timestamp: timestamp
     };
 
-    console.log('Sending email with params:', templateParams);
-
     emailjs
-      .send('service_as5nkhb', 'template_qt47zk2', templateParams, {
-        publicKey: 'frtARbq4fN6cuksO_',
+      .send(SERVICE_ID, TEMPLATE_ID, templateParams, {
+        publicKey: PUBLIC_KEY,
       })
       .then(
         () => {
           toast.success('Thank you! Your message has been sent successfully. We\'ll get back to you shortly.');
           formElement.reset();
-          setProjectType('Select project type');
+          setProjectType('');
+          setIsSubmitting(false)
         },
         (error) => {
           console.log('FAILED...', error);
@@ -67,9 +70,6 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
 
         },
       );
-
-
-    setIsSubmitting(false);
   };
 
   const contactInfo = [
@@ -217,7 +217,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                   <div>
                     <Label htmlFor="projectType">Project Type</Label>
                     <Select name='project_type' onValueChange={(e) => { setProjectType(e) }}>
-                      <SelectTrigger><SelectValue placeholder={projectType} /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="Select project type" /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="contracting">Contracting Works</SelectItem>
                         <SelectItem value="civil">Civil Engineering</SelectItem>
@@ -231,7 +231,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                     <Label htmlFor="message">Project Details *</Label>
                     <Textarea id="message" required rows={5} />
                   </div>
-                  <Button type="submit" className="w-full bg-cyan-600" disabled={isSubmitting}>
+                  <Button type="submit" className="w-full bg-cyan-600 cursor-pointer" disabled={isSubmitting}>
                     {isSubmitting ? 'Sending...' : <>Send Message <Send className="ml-2 w-4 h-4" /></>}
                   </Button>
                 </form>
