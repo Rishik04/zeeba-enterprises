@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import pump from "../../assets/pump.jpeg";
 import site from "../../assets/site1.jpeg";
-import road from "../../assets/road.jpeg";
+import road from "../../assets/mining3.jpeg";
 import road1 from "../../assets/roadways.jpeg";
 
 interface ServicesPageProps {

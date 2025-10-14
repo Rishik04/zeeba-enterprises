@@ -111,6 +111,12 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
       address: 'Patna, Bihar, India',
       phone: '9693388722',
       services: ['On-site Coordination', 'Civil Engineering Support', 'Client Meetings']
+    },
+    {
+      name: 'Project Branch Office',
+      address: 'Varanasi, Uttar Pradesh, India',
+      phone: '7061165579',
+      services: ['On-site Coordination', 'Civil Engineering Support', 'Client Meetings']
     }
   ];
 
