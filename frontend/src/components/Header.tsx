@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Button } from './ui/button';
-import { Menu, X, Building2, Award, Star } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { motion } from 'motion/react';
-import logo from "../assets/logo.png"
+import { useEffect, useState } from 'react';
+import logo from "../assets/logo.png";
+import { Button } from './ui/button';
 
 interface HeaderProps {
   currentPage: string;

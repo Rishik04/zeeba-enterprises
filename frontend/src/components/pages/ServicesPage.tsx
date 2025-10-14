@@ -15,8 +15,10 @@ import {
   TrendingUp,
   HardHat
 } from 'lucide-react';
-import railway from "../../assets/rail.png";
 import pump from "../../assets/pump.jpeg";
+import site from "../../assets/site1.jpeg";
+import road from "../../assets/road.jpeg";
+import road1 from "../../assets/roadways.jpeg";
 
 interface ServicesPageProps {
   onNavigate: (page: string) => void;
@@ -29,13 +31,13 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
       title: 'Contracting Works',
       description: 'Execution of railway, mining, roadways, pipelines, and building projects with high standards of quality and safety.',
       features: [
-        'Railway & Metro Construction',
+        'Railway Construction',
         'Mining Infrastructure Development',
         'Road & Highway Projects',
         'Pipeline & Water Systems',
         'Building & Civil Structures'
       ],
-      image: railway
+      image: road
     },
     {
       icon: Truck,
@@ -61,7 +63,7 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
         'Urban Development Projects',
         'Environmental Engineering'
       ],
-      image: 'https://images.pexels.com/photos/439416/pexels-photo-439416.jpeg?_gl=1*1w94pv6*_ga*MTA0ODk5MDIyMS4xNzQ4NDA2Mjkz*_ga_8JE65Q40S6*czE3NjA0NDI0NDYkbzQkZzEkdDE3NjA0NDI1ODIkajYwJGwwJGgw'
+      image: site
     },
     {
       icon: Wrench,
@@ -99,7 +101,7 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
       <section className="relative py-20 bg-gradient-to-r from-gray-900 to-gray-700">
         <div className="absolute inset-0 bg-cover bg-center opacity-20"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxJbmRpYW4lMjBDb25zdHJ1Y3Rpb24lMjBTaXRlfGVufDF8fHx8MTc1OTIzNDUxMnww&ixlib=rb-4.1.0&q=80&w=1080')`
+            backgroundImage:`url(${road1})`
           }} />
         <div className="relative z-10 max-w-7xl mx-auto px-4 text-center">
           <Badge className="mb-4 bg-white/20 text-white border-white/40">Our Services</Badge>

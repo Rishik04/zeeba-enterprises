@@ -1,12 +1,11 @@
-import { Award, Shield, Target, Users, Zap } from 'lucide-react';
+import { Shield, Target, Users, Zap } from 'lucide-react';
+import chairman from "../../assets/chairman.jpeg";
+import mining from "../../assets/mining2.jpeg";
+import rail from "../../assets/rail.jpeg";
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
-import chairman from "../../assets/chairman.jpeg";
-import cpm from "../../assets/cpm.jpeg";
-import railway from "../../assets/rail.png";
-import mining from "../../assets/mining.png";
 
 
 
@@ -45,23 +44,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
       experience: '20+ years',
       description: 'A visionary leader with extensive experience in infrastructure projects, guiding Zeba Enterprises with a commitment to quality and innovation.',
       photo: chairman
-    },
-    // {
-    //   name: 'Nagesh Kumar',
-    //   role: 'Chief Project Manager',
-    //   experience: '10+ years',
-    //   description: 'Expert in managing large-scale civil and railway projects, ensuring timely and budget-compliant delivery.',
-    //   photo: cpm
-    // },
-  ];
-
-  const certifications = [
-    'ISO 9001:2015 Certified',
-    'Registered Class-I Contractor',
-    'National Safety Council Member',
-    'Indian Green Building Council (IGBC) Member',
-    'Certified for Railway Project Works',
-    'Licensed for Mining Operations'
+    }
   ];
 
   return (
@@ -72,7 +55,8 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
           style={{
             // Recommended image: Page 2 of PDF (Construction site at sunset)
-            backgroundImage: `url('https://images.unsplash.com/photo-1718209962486-4f91ce71886b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjB3b3JrZXJzJTIwdGVhbXxlbnwxfHx8fDE3NTg2NzUzMjd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral')`
+            backgroundImage: `url(${rail})`
+
           }}
         />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -162,7 +146,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                 <CardContent className="p-6">
                   <div className="w-50 h-50 rounded-full mx-auto mb-4 flex items-center justify-center overflow-hidden">
                     {/* <Users className="w-12 h-12 text-white" /> */}
-                    <ImageWithFallback src={member.photo} className='w-full h-full object-cover rounded-full' style={{objectPosition: "50% 10%"}} />
+                    <ImageWithFallback src={member.photo} className='w-full h-full object-cover rounded-full' style={{ objectPosition: "50% 10%" }} />
                   </div>
                   <h3 className="font-bold mb-2">{member.name}</h3>
                   <p className="text-cyan-600 font-medium mb-2">{member.role}</p>
@@ -204,43 +188,6 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
           </div>
         </div>
       </section>
-
-      {/* Certifications & Awards */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                Certifications & Credentials
-              </h2>
-              <p className="text-lg text-gray-600 mb-8">
-                We maintain the highest industry standards through continuous education,
-                certifications, and professional development. Our credentials ensure that
-                we deliver safe, compliant, and high-quality construction services.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {certifications.map((cert, index) => (
-                  <div key={index} className="flex items-center">
-                    <Award className="w-5 h-5 text-cyan-600 mr-3 flex-shrink-0" />
-                    <span className="text-gray-700">{cert}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="relative">
-              <ImageWithFallback
-                // Recommended image: Page 14 of PDF (JCB excavator)
-                src={railway}
-                className="w-full h-96 object-cover rounded-lg shadow-xl"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-
     </div>
   );
 }
