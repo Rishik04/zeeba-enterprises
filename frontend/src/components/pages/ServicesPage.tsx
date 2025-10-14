@@ -15,7 +15,7 @@ import {
   TrendingUp,
   HardHat
 } from 'lucide-react';
-import railway from "../../assets/railway.jpeg";
+import railway from "../../assets/rail.png";
 import pump from "../../assets/pump.jpeg";
 
 interface ServicesPageProps {

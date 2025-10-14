@@ -28,10 +28,7 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
       title: 'Railways Affairs in Varanasi Division',
       type: 'Railway',
       location: 'Varanasi, Uttar Pradesh',
-      value: '₹12 Cr',
       progress: 65,
-      startDate: 'February 2023',
-      completionDate: 'March 2026',
       description: 'Comprehensive railway infrastructure development and maintenance project in the Varanasi Division.',
       image: ['https://images.unsplash.com/photo-1590664287877-94322cde08ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxSYWlsd2F5JTIwVHJhY2tzJTIwSW5kaWF8ZW58MXx8fHwxNzU5MjM0NTA3fDA&ixlib=rb-4.1.0&q=80&w=1080'], // Recommended: Image from PDF Page 13
       features: ['Track Laying', 'Signal Modernization', 'Station Upgrades', 'Safety Compliance']
@@ -41,10 +38,7 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
       title: 'Mining Project Affairs in Dhanbad',
       type: 'Mining',
       location: 'Dhanbad, Jharkhand',
-      value: '₹8 Cr',
       progress: 80,
-      startDate: 'June 2023',
-      completionDate: 'December 2025',
       description: 'Ongoing mining operations support, including infrastructure and logistics management in Dhanbad.',
       image: ['https://images.unsplash.com/photo-1627393439002-306135839074?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxNaW5pbmclMjBFeGNhdmF0b3J8ZW58MXx8fHwxNzU5MjM0NTA4fDA&ixlib=rb-4.1.0&q=80&w=1080'], // Recommended: Image from PDF Page 14
       features: ['Site Management', 'Logistical Support', 'Equipment Maintenance', 'Safety Protocols']
@@ -54,10 +48,7 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
       title: 'Building Construction in Patna',
       type: 'Residential',
       location: 'Patna, Bihar',
-      value: '₹5.5 Cr',
       progress: 50,
-      startDate: 'January 2024',
-      completionDate: 'June 2026',
       description: 'Construction of a multi-story residential apartment complex in a prime location in Patna.',
       image: ['https://images.unsplash.com/photo-1517581177682-a085bb7ffb12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxJbmRpYW4lMjBCdWlsZGluZyUyMFVuZGVyJTIwQ29uc3RydWN0aW9ufGVufDF8fHx8MTc1OTIzNDUwOXww&ixlib=rb-4.1.0&q=80&w=1080'], // Recommended: Image from PDF Page 16
       features: ['Multi-story Structure', 'Modern Amenities', 'Quality Materials', 'Timely Execution']
@@ -67,10 +58,7 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
       title: 'Roadways Project in Barhi',
       type: 'Infrastructure',
       location: 'Barhi, Jharkhand',
-      value: '₹9 Cr',
       progress: 90,
-      startDate: 'April 2023',
-      completionDate: 'November 2025',
       description: 'Development and paving of key roadways to improve connectivity and transport in Barhi.',
       image: ['https://images.unsplash.com/photo-1621994345719-2149b80894e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxJbmRpYW4lMjBSb2FkJTIwQ29uc3RydWN0aW9ufGVufDF8fHx8MTc1OTIzNDUwOXww&ixlib=rb-4.1.0&q=80&w=1080'], // Recommended: Image from PDF Page 17
       features: ['Asphalt Paving', 'Drainage Systems', 'Road Marking', 'Safety Barriers']
@@ -80,10 +68,7 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
       title: 'Civil Project Affairs in Dhanbad',
       type: 'Civil',
       location: 'Dhanbad, Jharkhand',
-      value: '₹4 Cr',
       progress: 70,
-      startDate: 'October 2023',
-      completionDate: 'February 2026',
       description: 'Specialized civil engineering works, including bridge and structural projects in Dhanbad.',
       image: ['https://images.unsplash.com/photo-1618585807987-a31d9a2a7589?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxCcmlkZ2UlMjBDb25zdHJ1Y3Rpb24lMjBJbmRpYXxlbnwxfHx8fDE3NTkyMzQ1MTB8MA&ixlib=rb-4.1.0&q=80&w=1080'], // Recommended: Image from PDF Page 15
       features: ['Bridge Construction', 'Structural Integrity', 'Foundation Work', 'Quality Assurance']
@@ -96,8 +81,6 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
       title: 'Water Pipeline in Dhanbad',
       type: 'Infrastructure',
       location: 'Dhanbad, Jharkhand',
-      value: '₹3.5 Cr',
-      completedDate: 'March 2022',
       description: 'Successfully executed the laying of a major water pipeline to improve water supply in the Dhanbad region.',
       image: ['https://images.unsplash.com/photo-1590693539209-6d1151e6b365?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxXYXRlciUyMFBpcGVsaW5lJTIwQ29uc3RydWN0aW9ufGVufDF8fHx8MTc1OTIzNDUxMHww&ixlib=rb-4.1.0&q=80&w=1080'], // Placeholder image
       features: ['High-Density Pipe', 'Trenching & Laying', 'Leak-proof Jointing', 'Community Impact'],
@@ -108,8 +91,6 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
       title: 'Warehouse Construction',
       type: 'Commercial',
       location: 'Jharia, Jharkhand',
-      value: '₹2.8 Cr',
-      completedDate: 'December 2023',
       description: 'Built a state-of-the-art warehouse facility for a major logistics partner in the Jharia industrial area.',
       image: ['https://images.unsplash.com/photo-1587145820137-a9a499318858?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxJbmR1c3RyaWFsJTIwV2FyZWhvdXNlfGVufDF8fHx8MTc1OTIzNDUxMXww&ixlib=rb-4.1.0&q=80&w=1080'], // Placeholder image
       features: ['Steel Frame Structure', 'High-capacity Storage', 'Loading Docks', 'Security Systems'],
@@ -120,8 +101,6 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
       title: 'Community Hall Renovation',
       type: 'Public',
       location: 'Katras, Jharkhand',
-      value: '₹1.2 Cr',
-      completedDate: 'August 2024',
       description: 'Complete renovation and modernization of the Katras municipal community hall for public events.',
       image: ['https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxNb2Rlcm4lMjBJbnRlcmlvciUyMEhvbWV8ZW58MXx8fHwxNzU5MjM0NTEyfDA&ixlib=rb-4.1.0&q=80&w=1080'], // Placeholder image
       features: ['Structural Upgrades', 'Modern Interiors', 'AV System Integration', 'Accessibility Features'],
@@ -201,16 +180,8 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
         <p className="text-gray-600 mb-4 h-16">{project.description}</p>
 
         <div className="space-y-2 mb-4">
-          <div className="flex items-center text-sm">
-            <DollarSign className="w-4 h-4 mr-2 text-green-600" />
-            <span>Project Value: {project.value}</span>
-          </div>
           {isCurrent ? (
             <>
-              <div className="flex items-center text-sm">
-                <Calendar className="w-4 h-4 mr-2 text-blue-600" />
-                <span>Est. Completion: {project.completionDate}</span>
-              </div>
               <div className="mt-3">
                 <div className="flex justify-between text-sm mb-1">
                   <span>Progress</span>
@@ -224,12 +195,8 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
                 </div>
               </div>
             </>
-          ) : (
-            <div className="flex items-center text-sm">
-              <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-              <span>Completed: {project.completedDate}</span>
-            </div>
-          )}
+          ) : ""
+          }
         </div>
 
         <div className="mb-4">

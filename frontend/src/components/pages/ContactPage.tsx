@@ -7,7 +7,7 @@ import {
   Phone,
   Send
 } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'sonner@2.0.3';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
@@ -16,44 +16,58 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Textarea } from '../ui/textarea';
+import emailjs from "@emailjs/browser"
 
 interface ContactPageProps {
   onNavigate: (page: string) => void;
 }
 
 export function ContactPage({ onNavigate }: ContactPageProps) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    projectType: '',
-    budget: '',
-    timeline: '',
-    message: ''
-  });
-
+  const form = useRef();
+  const [projectType, setProjectType] = useState('Select project type');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const formElement = form.current as HTMLFormElement;
 
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    toast.success('Thank you! Your message has been sent successfully. We\'ll get back to you shortly.');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      projectType: '',
-      budget: '',
-      timeline: '',
-      message: ''
+    const timestamp = new Date().toLocaleString('en-IN', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: 'Asia/Kolkata'
     });
+
+    // Create template params with timestamp
+    const templateParams = {
+      from_name: formElement.from_name.value,
+      from_email: formElement.from_email.value,
+      phone: formElement.phone.value || 'Not provided',
+      project_type: projectType || 'Not specified',
+      message: formElement.message.value,
+      timestamp: timestamp
+    };
+
+    console.log('Sending email with params:', templateParams);
+
+    emailjs
+      .send('service_as5nkhb', 'template_qt47zk2', templateParams, {
+        publicKey: 'frtARbq4fN6cuksO_',
+      })
+      .then(
+        () => {
+          toast.success('Thank you! Your message has been sent successfully. We\'ll get back to you shortly.');
+          formElement.reset();
+          setProjectType('Select project type');
+        },
+        (error) => {
+          console.log('FAILED...', error);
+          toast.error('Failed to send message. Please try again or contact us directly.');
+
+        },
+      );
+
+
     setIsSubmitting(false);
   };
 
@@ -61,7 +75,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     {
       icon: Phone,
       title: 'Phone',
-      details: ['+91 98765 43210'],
+      details: ['9801359772 / 9693388722'],
       description: 'Call us for immediate assistance'
     },
     {
@@ -88,13 +102,13 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     {
       name: 'Head Office',
       address: 'Dhanbad, Jharkhand, India',
-      phone: '+91 98765 43210',
+      phone: '9801359772',
       services: ['General Inquiries', 'Contracting Works', 'Project Management']
     },
     {
       name: 'Project Branch Office',
       address: 'Patna, Bihar, India',
-      phone: '+91 98765 43211',
+      phone: '9693388722',
       services: ['On-site Coordination', 'Civil Engineering Support', 'Client Meetings']
     }
   ];
@@ -178,25 +192,25 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form ref={form} onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="name">Full Name *</Label>
-                      <Input id="name" type="text" value={formData.name} onChange={(e) => handleInputChange('name', e.target.value)} required />
+                      <Input id="name" name='from_name' type="text" required />
                     </div>
                     <div>
                       <Label htmlFor="email">Email Address *</Label>
-                      <Input id="email" type="email" value={formData.email} onChange={(e) => handleInputChange('email', e.target.value)} required />
+                      <Input id="email" name='from_email' type="email" required />
                     </div>
                   </div>
                   <div>
                     <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" type="tel" value={formData.phone} onChange={(e) => handleInputChange('phone', e.target.value)} />
+                    <Input id="phone" name='phone' type="tel" />
                   </div>
                   <div>
                     <Label htmlFor="projectType">Project Type</Label>
-                    <Select onValueChange={(value) => handleInputChange('projectType', value)}>
-                      <SelectTrigger><SelectValue placeholder="Select project type" /></SelectTrigger>
+                    <Select name='project_type' onValueChange={(e) => { setProjectType(e) }}>
+                      <SelectTrigger><SelectValue placeholder={projectType} /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="contracting">Contracting Works</SelectItem>
                         <SelectItem value="civil">Civil Engineering</SelectItem>
@@ -208,7 +222,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                   </div>
                   <div>
                     <Label htmlFor="message">Project Details *</Label>
-                    <Textarea id="message" value={formData.message} onChange={(e) => handleInputChange('message', e.target.value)} required rows={5} />
+                    <Textarea id="message" required rows={5} />
                   </div>
                   <Button type="submit" className="w-full bg-cyan-600" disabled={isSubmitting}>
                     {isSubmitting ? 'Sending...' : <>Send Message <Send className="ml-2 w-4 h-4" /></>}
@@ -278,9 +292,9 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
           <p className="text-xl text-blue-100 mb-8">
             For urgent site coordination, safety issues, or emergency project needs, our team is available around the clock.
           </p>
-          <Button size="lg" className="bg-white text-cyan-600 cursor-pointer hover:bg-gray-100 px-8 py-3" onClick={() => window.open('tel:+919876543210')}>
+          <Button size="lg" className="bg-white text-cyan-600 cursor-pointer hover:bg-gray-100 px-8 py-3" onClick={() => window.open('tel:9693388722')}>
             <Phone className="w-5 h-5 mr-2" />
-            Call Now: +91 98765 43210
+            Call Now: +91 9693388722
           </Button>
         </div>
       </section>
