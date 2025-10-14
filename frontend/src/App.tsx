@@ -50,6 +50,7 @@ export default function App() {
   useEffect(() => {
     const path = currentPage === 'home' ? '/' : `/${currentPage}`;
     window.history.pushState(null, '', path);
+    document.title = `${currentPage.charAt(0).toUpperCase()+currentPage.slice(1)} - Zeba Enterprises`;
   }, [currentPage]);
 
   // Loading animation

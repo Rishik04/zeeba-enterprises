@@ -67,7 +67,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     {
       icon: Mail,
       title: 'Email',
-      details: ['info@zebaenterprises.com'],
+      details: ['zebaenterprises5@gmail.com'],
       description: 'Send us your project details'
     },
     {

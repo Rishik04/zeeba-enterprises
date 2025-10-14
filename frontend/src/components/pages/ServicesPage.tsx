@@ -15,6 +15,8 @@ import {
   TrendingUp,
   HardHat
 } from 'lucide-react';
+import railway from "../../assets/railway.jpeg";
+import pump from "../../assets/pump.jpeg";
 
 interface ServicesPageProps {
   onNavigate: (page: string) => void;
@@ -33,7 +35,7 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
         'Pipeline & Water Systems',
         'Building & Civil Structures'
       ],
-      image: 'https://images.unsplash.com/photo-1608627732420-f743aee4c80c?auto=format&fit=crop&w=1080&q=80'
+      image: railway
     },
     {
       icon: Truck,
@@ -46,7 +48,7 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
         'Storage & Inventory Solutions',
         'Heavy Equipment Logistics'
       ],
-      image: 'https://images.unsplash.com/photo-1610484826967-09c5720778b5?auto=format&fit=crop&w=1080&q=80'
+      image: 'https://images.pexels.com/photos/29057946/pexels-photo-29057946.jpeg'
     },
     {
       icon: HardHat,
@@ -59,7 +61,7 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
         'Urban Development Projects',
         'Environmental Engineering'
       ],
-      image: 'https://images.unsplash.com/photo-1581091012184-5c9af85f1c4b?auto=format&fit=crop&w=1080&q=80'
+      image: 'https://images.pexels.com/photos/439416/pexels-photo-439416.jpeg?_gl=1*1w94pv6*_ga*MTA0ODk5MDIyMS4xNzQ4NDA2Mjkz*_ga_8JE65Q40S6*czE3NjA0NDI0NDYkbzQkZzEkdDE3NjA0NDI1ODIkajYwJGwwJGgw'
     },
     {
       icon: Wrench,
@@ -72,7 +74,7 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
         'Maintenance & Repairs',
         'Industrial Pump Solutions'
       ],
-      image: 'https://images.unsplash.com/photo-1509395176047-4a66953fd231?auto=format&fit=crop&w=1080&q=80'
+      image: pump
     }
   ];
 

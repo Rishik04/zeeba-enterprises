@@ -89,7 +89,7 @@ export function Footer({ onNavigate }: FooterProps) {
                 >
                   <button
                     onClick={() => onNavigate(item.toLowerCase())}
-                    className="text-cyan-200 hover:text-cyan-500 transition-colors duration-300 hover:translate-x-1 transform inline-block"
+                    className="text-cyan-200 hover:text-cyan-500 transition-colors duration-300 hover:translate-x-1 transform inline-block cursor-pointer"
                   >
                     {item}
                   </button>
@@ -106,17 +106,19 @@ export function Footer({ onNavigate }: FooterProps) {
           >
             <h4 className="font-semibold mb-6 text-white">Headquarters</h4>
             <div className="space-y-4">
-              <div className="flex items-center">
+              <div className="flex items-center cursor-pointer">
                 <div className="w-8 h-8 bg-cyan-800/50 rounded-lg flex items-center justify-center mr-3">
                   <Phone className="w-4 h-4 text-cyan-500" />
                 </div>
-                <span className="text-gray-300">9801359772, 9693388722</span>
+                <span className="text-gray-300 mr-1" onClick={(e)=>window.location.href="tel:9801359772"}>9801359772</span>
+                <span className="text-gray-300">/</span>
+                <span className="text-gray-300 ml-1" onClick={(e)=>window.location.href="tel:9693388722"}>9693388722</span>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center cursor-pointer">
                 <div className="w-8 h-8 bg-cyan-800/50 rounded-lg flex items-center justify-center mr-3">
                   <Mail className="w-4 h-4 text-cyan-500" />
                 </div>
-                <span className="text-gray-300">sahbaz00786@gmail.com</span>
+                <span className="text-gray-300" onClick={(e)=>window.location.href="mailto:zebaenterprises5@gmail.com"}>zebaenterprises5@gmail.com</span>
               </div>
               <div className="flex items-start">
                 <div className="w-8 h-8 bg-cyan-800/50 rounded-lg flex items-center justify-center mr-3 mt-1">

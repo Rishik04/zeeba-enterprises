@@ -83,9 +83,9 @@ export function Header({ currentPage, onNavigate, isAuthenticated, onLogout }: H
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 onClick={() => onNavigate(item.href)}
-                className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg ${currentPage === item.href
-                  ? 'text-emerald-700 bg-emerald-50'
-                  : 'text-gray-700 hover:text-emerald-700 hover:bg-emerald-50'
+                className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg cursor-pointer ${currentPage === item.href
+                  ? 'text-cyan-600 bg-cyan-50'
+                  : 'text-gray-700 hover:text-cyan-600 hover:bg-cyan-50'
                   }`}
               >
                 {item.name}
@@ -101,22 +101,23 @@ export function Header({ currentPage, onNavigate, isAuthenticated, onLogout }: H
           </nav>
 
           {/* Premium CTA Button */}
-          <div className="hidden md:flex space-x-3">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              {isAuthenticated && (
+          {isAuthenticated ?
+            (<div className="hidden md:flex space-x-3">
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
                 <motion.button
                   onClick={onLogout}
                   className="ml-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary transition"
                 >
                   Logout
                 </motion.button>
-              )}
-            </motion.div>
-          </div>
+              </motion.div>
+            </div>)
+            : ""
+          }
 
           {/* Mobile menu button */}
           <div className="md:hidden">
