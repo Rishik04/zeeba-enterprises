@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import { Header } from './components/Header';
-import { Footer } from './components/Footer';
-import { HomePage } from './components/pages/HomePage';
-import { AboutPage } from './components/pages/AboutPage';
-import { ServicesPage } from './components/pages/ServicesPage';
-import { ProjectsPage } from './components/pages/ProjectsPage';
-import { DashboardPage } from './components/pages/DashboardPage';
-import { ContactPage } from './components/pages/ContactPage';
-import { Toaster } from './components/ui/sonner';
-import { motion } from 'motion/react';
-import { AdminLogin } from './components/pages/AdminLogin';
 import axios from 'axios';
+import { motion } from 'motion/react';
+import { useEffect, useState } from 'react';
+import { Footer } from './components/Footer';
+import { Header } from './components/Header';
+import { AboutPage } from './components/pages/AboutPage';
+import { AdminLogin } from './components/pages/AdminLogin';
+import { ContactPage } from './components/pages/ContactPage';
+import { DashboardPage } from './components/pages/DashboardPage';
+import { HomePage } from './components/pages/HomePage';
+import { ProjectsPage } from './components/pages/ProjectsPage';
+import { ServicesPage } from './components/pages/ServicesPage';
+import { Toaster } from './components/ui/sonner';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -50,7 +50,7 @@ export default function App() {
   useEffect(() => {
     const path = currentPage === 'home' ? '/' : `/${currentPage}`;
     window.history.pushState(null, '', path);
-    document.title = `${currentPage.charAt(0).toUpperCase()+currentPage.slice(1)} - Zeba Enterprises`;
+    document.title = `${currentPage.charAt(0).toUpperCase() + currentPage.slice(1)} - Zeba Enterprises`;
   }, [currentPage]);
 
   // Loading animation

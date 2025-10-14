@@ -5,7 +5,11 @@ import { Badge } from '../ui/badge';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import { ArrowRight, Star, Users, Calendar, Shield, TrendingUp, Building2, Truck, Crown, Wrench } from 'lucide-react';
 import { motion } from 'motion/react';
-import rail from "../../assets/rail.png"
+import rail from "../../assets/rail.jpeg"
+import road from "../../assets/road2.jpeg"
+import mining from "../../assets/mining1.jpeg"
+import road2 from "../../assets/road3.jpeg"
+import pump from "../../assets/pump.jpeg"
 
 interface HomePageProps {
   onNavigate: (page: string) => void;
@@ -16,10 +20,11 @@ function ConstructionSlideshow() {
   const [currentImage, setCurrentImage] = useState(0);
 
   const constructionImages = [
-    { url: rail, label: "Railways & Metro" },
-    { url: "https://images.unsplash.com/photo-1667604579449-14298726118b?crop=entropy&cs=tinysrgb&fit=max&q=80&w=1080", label: "Roadways & Highways" },
-    { url: "https://images.unsplash.com/photo-1580664031752-0f1379ea4de2?crop=entropy&cs=tinysrgb&fit=max&q=80&w=1080", label: "Mining Projects" },
-    { url: "https://images.unsplash.com/photo-1667604579449-14298726118b?crop=entropy&cs=tinysrgb&fit=max&q=80&w=1080", label: "Civil & Building Works" }
+    { url: rail, label: "Railways Projects" },
+    { url: road, label: "Roadways & Highways Projects" },
+    { url: mining, label: "Mining Projects" },
+    { url: road2, label: "Civil & Building Works Projets" },
+    { url: pump, label: "Pipelines Projects" }
   ];
 
   useEffect(() => {
@@ -91,6 +96,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
       rating: 5,
     }
   ];
+
   const clients = [
     "Ministry of Housing",
     "Local Municipalities",
@@ -115,7 +121,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
           <h1 className="text-6xl font-bold mb-6">Constructing India’s <span className="text-cyan-500">Future</span></h1>
           <p className="text-xl mb-12 max-w-3xl mx-auto">
             From <span className="text-cyan-500">Railways</span> to <span className="text-cyan-500">Roadways</span>,
-            <span className="text-cyan-500"> Mining</span> to <span className="text-cyan-500">Civil Projects</span> —
+            <span className="text-cyan-500"> Mining</span> to <span className="text-cyan-500">Civil Projects</span>,
+            <span className="text-cyan-500"> Pipelines</span> to <span className="text-cyan-500">Pump Engineering</span> —
             building sustainable progress across India.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">

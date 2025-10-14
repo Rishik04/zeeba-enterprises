@@ -17,6 +17,7 @@ import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Textarea } from '../ui/textarea';
 import emailjs from "@emailjs/browser"
+import pump from "../../assets/pump.jpeg"
 
 interface ContactPageProps {
   onNavigate: (page: string) => void;
@@ -139,7 +140,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxJbmRpYW4lMjBDb25zdHJ1Y3Rpb24lMjBTaXRlfGVufDF8fHx8MTc1OTIzNDUxMnww&ixlib=rb-4.1.0&q=80&w=1080')`
+            backgroundImage:`url(${pump})`
           }}
         />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

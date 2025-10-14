@@ -13,6 +13,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import road from "../../assets/road3.jpeg"
+import rail from "../../assets/rail.jpeg"
 
 interface ProjectsPageProps {
   onNavigate: (page: string) => void;
@@ -30,7 +32,7 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
       location: 'Varanasi, Uttar Pradesh',
       progress: 65,
       description: 'Comprehensive railway infrastructure development and maintenance project in the Varanasi Division.',
-      image: ['https://images.unsplash.com/photo-1590664287877-94322cde08ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxSYWlsd2F5JTIwVHJhY2tzJTIwSW5kaWF8ZW58MXx8fHwxNzU5MjM0NTA3fDA&ixlib=rb-4.1.0&q=80&w=1080'], // Recommended: Image from PDF Page 13
+      image: [rail], // Recommended: Image from PDF Page 13
       features: ['Track Laying', 'Signal Modernization', 'Station Upgrades', 'Safety Compliance']
     },
     {
@@ -234,7 +236,7 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxJbmRpYW4lMjBDb25zdHJ1Y3Rpb24lMjBTaXRlfGVufDF8fHx8MTc1OTIzNDUxMnww&ixlib=rb-4.1.0&q=80&w=1080')`
+            backgroundImage:`url(${road})`
           }}
         />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
