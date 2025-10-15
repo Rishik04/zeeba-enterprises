@@ -1,20 +1,10 @@
-import { Calendar, CheckCircle, DollarSign, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { api } from '../../App';
-import { ImageWithFallback } from '../figma/ImageWithFallback';
+import road from "../../assets/road3.jpeg";
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import road from "../../assets/road3.jpeg"
-import rail from "../../assets/rail.jpeg"
+import ProjectCard from '../ProjectCard';
 
 interface ProjectsPageProps {
   onNavigate: (page: string) => void;
@@ -22,212 +12,31 @@ interface ProjectsPageProps {
 
 export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
-  // const [currentProjects, setCurrentProjects] = useState([]);
+  const [currentProjects, setCurrentProjects] = useState([]);
+  const [completedProjects, setCompletedProjects] = useState([]);
+  const [upcomingProjects, setUpcomingProjects] = useState([]);
 
-  const currentProjects = [
-    {
-      id: 2,
-      title: 'Railways Affairs in Varanasi Division',
-      type: 'Railway',
-      location: 'Varanasi, Uttar Pradesh',
-      progress: 65,
-      description: 'Comprehensive railway infrastructure development and maintenance project in the Varanasi Division.',
-      image: [rail], // Recommended: Image from PDF Page 13
-      features: ['Track Laying', 'Signal Modernization', 'Station Upgrades', 'Safety Compliance']
-    },
-    {
-      id: 3,
-      title: 'Mining Project Affairs in Dhanbad',
-      type: 'Mining',
-      location: 'Dhanbad, Jharkhand',
-      progress: 80,
-      description: 'Ongoing mining operations support, including infrastructure and logistics management in Dhanbad.',
-      image: ['https://images.unsplash.com/photo-1627393439002-306135839074?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxNaW5pbmclMjBFeGNhdmF0b3J8ZW58MXx8fHwxNzU5MjM0NTA4fDA&ixlib=rb-4.1.0&q=80&w=1080'], // Recommended: Image from PDF Page 14
-      features: ['Site Management', 'Logistical Support', 'Equipment Maintenance', 'Safety Protocols']
-    },
-    {
-      id: 5,
-      title: 'Building Construction in Patna',
-      type: 'Residential',
-      location: 'Patna, Bihar',
-      progress: 50,
-      description: 'Construction of a multi-story residential apartment complex in a prime location in Patna.',
-      image: ['https://images.unsplash.com/photo-1517581177682-a085bb7ffb12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxJbmRpYW4lMjBCdWlsZGluZyUyMFVuZGVyJTIwQ29uc3RydWN0aW9ufGVufDF8fHx8MTc1OTIzNDUwOXww&ixlib=rb-4.1.0&q=80&w=1080'], // Recommended: Image from PDF Page 16
-      features: ['Multi-story Structure', 'Modern Amenities', 'Quality Materials', 'Timely Execution']
-    },
-    {
-      id: 6,
-      title: 'Roadways Project in Barhi',
-      type: 'Infrastructure',
-      location: 'Barhi, Jharkhand',
-      progress: 90,
-      description: 'Development and paving of key roadways to improve connectivity and transport in Barhi.',
-      image: ['https://images.unsplash.com/photo-1621994345719-2149b80894e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxJbmRpYW4lMjBSb2FkJTIwQ29uc3RydWN0aW9ufGVufDF8fHx8MTc1OTIzNDUwOXww&ixlib=rb-4.1.0&q=80&w=1080'], // Recommended: Image from PDF Page 17
-      features: ['Asphalt Paving', 'Drainage Systems', 'Road Marking', 'Safety Barriers']
-    },
-    {
-      id: 4,
-      title: 'Civil Project Affairs in Dhanbad',
-      type: 'Civil',
-      location: 'Dhanbad, Jharkhand',
-      progress: 70,
-      description: 'Specialized civil engineering works, including bridge and structural projects in Dhanbad.',
-      image: ['https://images.unsplash.com/photo-1618585807987-a31d9a2a7589?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxCcmlkZ2UlMjBDb25zdHJ1Y3Rpb24lMjBJbmRpYXxlbnwxfHx8fDE3NTkyMzQ1MTB8MA&ixlib=rb-4.1.0&q=80&w=1080'], // Recommended: Image from PDF Page 15
-      features: ['Bridge Construction', 'Structural Integrity', 'Foundation Work', 'Quality Assurance']
-    }
-  ];
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const { data } = await api.get("/project/all-project");
 
-  const completedProjects = [
-    {
-      id: 1,
-      title: 'Water Pipeline in Dhanbad',
-      type: 'Infrastructure',
-      location: 'Dhanbad, Jharkhand',
-      description: 'Successfully executed the laying of a major water pipeline to improve water supply in the Dhanbad region.',
-      image: ['https://images.unsplash.com/photo-1590693539209-6d1151e6b365?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxXYXRlciUyMFBpcGVsaW5lJTIwQ29uc3RydWN0aW9ufGVufDF8fHx8MTc1OTIzNDUxMHww&ixlib=rb-4.1.0&q=80&w=1080'], // Placeholder image
-      features: ['High-Density Pipe', 'Trenching & Laying', 'Leak-proof Jointing', 'Community Impact'],
-      awards: ['Public Utility Project of the Year 2022']
-    },
-    {
-      id: 7,
-      title: 'Warehouse Construction',
-      type: 'Commercial',
-      location: 'Jharia, Jharkhand',
-      description: 'Built a state-of-the-art warehouse facility for a major logistics partner in the Jharia industrial area.',
-      image: ['https://images.unsplash.com/photo-1587145820137-a9a499318858?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxJbmR1c3RyaWFsJTIwV2FyZWhvdXNlfGVufDF8fHx8MTc1OTIzNDUxMXww&ixlib=rb-4.1.0&q=80&w=1080'], // Placeholder image
-      features: ['Steel Frame Structure', 'High-capacity Storage', 'Loading Docks', 'Security Systems'],
-      awards: ['Excellence in Industrial Construction']
-    },
-    {
-      id: 8,
-      title: 'Community Hall Renovation',
-      type: 'Public',
-      location: 'Katras, Jharkhand',
-      description: 'Complete renovation and modernization of the Katras municipal community hall for public events.',
-      image: ['https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxNb2Rlcm4lMjBJbnRlcmlvciUyMEhvbWV8ZW58MXx8fHwxNzU5MjM0NTEyfDA&ixlib=rb-4.1.0&q=80&w=1080'], // Placeholder image
-      features: ['Structural Upgrades', 'Modern Interiors', 'AV System Integration', 'Accessibility Features'],
-      awards: ['Community Impact Award 2024']
-    }
-  ];
+        if (Array.isArray(data) && data.length > 0) {
+          const ongoing: [] = data.filter(p => p.status === "ongoing");
+          const completed: [] = data.filter(p => p.status === "completed");
+          const upcoming: [] = data.filter(p => p.status === "upcoming");
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'Commercial': return 'bg-blue-100 text-blue-800';
-      case 'Residential': return 'bg-green-100 text-green-800';
-      case 'Infrastructure': return 'bg-purple-100 text-purple-800';
-      case 'Public': return 'bg-orange-100 text-orange-800';
-      case 'Railway': return 'bg-red-100 text-red-800';
-      case 'Mining': return 'bg-yellow-100 text-yellow-800';
-      case 'Civil': return 'bg-indigo-100 text-indigo-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
+          setCurrentProjects(ongoing);
+          setCompletedProjects(completed);
+          setUpcomingProjects(upcoming);
+        }
+      } catch (err) {
+        console.error("Error fetching projects:", err);
+      }
+    };
 
-  // useEffect(() => {
-  //   const project = async () => {
-  //     try {
-  //       const projects = await api.get("/project/all-project")
-  //       console.log(projects.data)
-  //       if (projects.data) {
-  //         setCurrentProjects(projects.data);
-  //       }
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-  //   };
-  //   project();
-  // }, [])
-
-  const ProjectCard = ({ project, isCurrent = false }: { project: any; isCurrent?: boolean }) => (
-    <Card className="hover:shadow-lg transition-shadow">
-      <div className="relative">
-        <Carousel className="w-full">
-          <CarouselContent>
-            {project.image.map((img: string, idx: number) => (
-              <CarouselItem key={idx}>
-                <div className="w-full h-48">
-                  <ImageWithFallback
-                    src={`http://localhost:8000/${img.replaceAll("\\", "/")}`}
-                    alt={`${project.title} ${idx + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          {project.image.length > 1 && (
-            <>
-              <CarouselPrevious className="absolute left-3 top-1/2 -translate-y-1/2 hover:bg-white hover:text-black" />
-              <CarouselNext className="absolute right-3 top-1/2 -translate-y-1/2 hover:bg-white hover:text-black" />
-            </>
-          )}
-        </Carousel>
-        <Badge className={`absolute top-3 left-3 ${getTypeColor(project.type)}`}>
-          {project.type}
-        </Badge>
-        {isCurrent && (
-          <div className="absolute top-3 right-3 bg-green-500 text-white px-2 py-1 rounded text-sm">
-            In Progress
-          </div>
-        )}
-      </div>
-      <CardHeader>
-        <CardTitle className="text-xl">{project.title}</CardTitle>
-        <div className="flex items-center text-gray-600 text-sm">
-          <MapPin className="w-4 h-4 mr-1" />
-          {project.location}
-        </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-gray-600 mb-4 h-16">{project.description}</p>
-
-        <div className="space-y-2 mb-4">
-          {isCurrent ? (
-            <>
-              <div className="mt-3">
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Progress</span>
-                  <span>{project.progress}%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-cyan-600 h-2 rounded-full"
-                    style={{ width: `${project.progress}%` }}
-                  ></div>
-                </div>
-              </div>
-            </>
-          ) : ""
-          }
-        </div>
-
-        <div className="mb-4">
-          <h4 className="font-semibold mb-2">Key Features</h4>
-          <div className="flex flex-wrap gap-1">
-            {project.features.map((feature: string, index: number) => (
-              <Badge key={index} variant="outline" className="text-xs">
-                {feature}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        {!isCurrent && project.awards && (
-          <div className="mb-4">
-            <h4 className="font-semibold mb-2">Awards & Recognition</h4>
-            <div className="flex flex-wrap gap-1">
-              {project.awards.map((award: string, index: number) => (
-                <Badge key={index} className="text-xs bg-yellow-100 text-yellow-800">
-                  {award}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-
-      </CardContent>
-    </Card>
-  );
+    fetchProjects();
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -236,7 +45,7 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
           style={{
-            backgroundImage:`url(${road})`
+            backgroundImage: `url(${road})`
           }}
         />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -279,9 +88,10 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Tabs defaultValue="current" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-12">
+            <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto mb-12">
               <TabsTrigger value="current">Current Projects</TabsTrigger>
               <TabsTrigger value="completed">Completed Projects</TabsTrigger>
+              <TabsTrigger value="upcoming">Upcoming Projects</TabsTrigger>
             </TabsList>
 
             <TabsContent value="current">
@@ -291,11 +101,10 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
                   Take a look at our ongoing projects and their progress.
                 </p>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {currentProjects && currentProjects != undefined ? currentProjects.map((project) => (
-                  <ProjectCard key={project._id} project={project} isCurrent={true} />
-                )) : ""}
+                {currentProjects.map((project) => (
+                  <ProjectCard key={project.id} project={project} status={"ongoing"} />
+                ))}
               </div>
             </TabsContent>
 
@@ -309,7 +118,22 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {completedProjects.map((project) => (
-                  <ProjectCard key={project.id} project={project} isCurrent={false} />
+                  <ProjectCard key={project.id} project={project} status={"completed"} />
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="upcoming">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-bold text-gray-900 mb-4">Upcoming Projects</h2>
+                <p className="text-xl text-gray-600">
+                  Showcasing our upcoming construction projects.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {upcomingProjects.map((project) => (
+                  <ProjectCard key={project.id} project={project} status={"upcoming"} />
                 ))}
               </div>
             </TabsContent>

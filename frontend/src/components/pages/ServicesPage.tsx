@@ -13,12 +13,16 @@ import {
   Award,
   Briefcase,
   TrendingUp,
-  HardHat
+  HardHat,
+  Train,
+  BusFront
 } from 'lucide-react';
 import pump from "../../assets/pump.jpeg";
 import site from "../../assets/site1.jpeg";
 import road from "../../assets/mining3.jpeg";
 import road1 from "../../assets/roadways.jpeg";
+import road4 from "../../assets/road4.jpeg";
+import rail from "../../assets/rail.jpeg";
 
 interface ServicesPageProps {
   onNavigate: (page: string) => void;
@@ -77,6 +81,32 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
         'Industrial Pump Solutions'
       ],
       image: pump
+    },
+    {
+      icon: BusFront,
+      title: 'Road and Bridge Service',
+      description: 'Specialized services for construction, maintenance, and repair of roads and bridges',
+      features: [
+        'Highway & Urban Road Construction',
+        'Bridge Design & Construction',
+        'Pavement Laying & Surfacing',
+        'Road Maintenance & Repair',
+        'Traffic Management Solutions'
+      ],
+      image: road4
+    },
+    {
+      icon: Train,
+      title: 'Railway Service',
+      description: 'Comprehensive railway infrastructure services including construction, maintenance, and safety management.',
+      features: [
+        'Rail Track Laying & Maintenance',
+        'Railway Signaling & Safety Systems',
+        'Station & Platform Construction',
+        'Bridge & Tunnel Construction for Railways',
+        'Railway Electrification & Communication Systems'
+      ],
+      image: rail
     }
   ];
 
@@ -101,7 +131,7 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
       <section className="relative py-20 bg-gradient-to-r from-gray-900 to-gray-700">
         <div className="absolute inset-0 bg-cover bg-center opacity-20"
           style={{
-            backgroundImage:`url(${road1})`
+            backgroundImage: `url(${road1})`
           }} />
         <div className="relative z-10 max-w-7xl mx-auto px-4 text-center">
           <Badge className="mb-4 bg-white/20 text-white border-white/40">Our Services</Badge>

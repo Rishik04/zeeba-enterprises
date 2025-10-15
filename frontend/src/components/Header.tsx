@@ -29,6 +29,9 @@ export function Header({ currentPage, onNavigate, isAuthenticated, onLogout }: H
     { name: 'Services', href: 'services' },
     { name: 'Projects', href: 'projects' },
     { name: 'Contact', href: 'contact' },
+    { name: 'Tender', href: 'tender' },
+    { name: 'Careers', href: 'career' },
+    { name: 'WebMail', href: 'webmail' },
   ];
 
   const navigation = isAuthenticated

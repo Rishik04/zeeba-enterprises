@@ -15,6 +15,13 @@ export const getAllProjects = async () => {
   return await ProjectModel.find().sort({ createdAt: -1 });
 };
 
+export const updateProjectStatusById = async (id, status) => {
+  const project = await ProjectModel.findById(id);
+  project.status = status;
+  await project.save();
+  return project;
+};
+
 // /**
 //  * Get project by ID
 //  */

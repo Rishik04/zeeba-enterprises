@@ -33,12 +33,12 @@ const projectSchema = new mongoose.Schema(
 
     startDate: {
       type: String,
-      required: true,
+      required: false,
     },
 
     completionDate: {
       type: String,
-      required: true,
+      required: false,
     },
 
     image: {

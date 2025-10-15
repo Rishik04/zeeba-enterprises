@@ -1,35 +1,35 @@
-import { useState } from 'react';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Input } from '../ui/input';
-import { Textarea } from '../ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import { Switch } from '../ui/switch';
-import { Label } from '../ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { 
-  Plus, 
-  Trash2, 
-  Edit, 
-  Building2, 
-  MapPin, 
-  IndianRupee, 
-  Calendar, 
-  Users, 
-  TrendingUp,
-  Clock,
-  CheckCircle,
+import {
   AlertCircle,
-  BarChart3,
-  Filter
+  Building2,
+  Calendar,
+  CheckCircle,
+  Clock,
+  Edit,
+  IndianRupee,
+  MapPin,
+  Plus,
+  Trash2,
+  TrendingUp,
+  Users
 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { api } from '../../App';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Textarea } from '../ui/textarea';
+import ProjectCard from '../ProjectCard';
 
 interface DashboardPageProps {
   onNavigate: (page: string) => void;
+  validate: () => void;
 }
 
 interface Project {
@@ -37,61 +37,22 @@ interface Project {
   title: string;
   description: string;
   location: string;
-  budget: string;
-  timeline: string;
+  budget: string | null;
+  timeline: string | null;
   status: 'ongoing' | 'upcoming' | 'completed';
   type: string;
-  team: number;
-  completion: number;
-  startDate: string;
-  estimatedEnd: string;
+  team: number | null;
+  completion: number | null;
+  startDate: string | null;
+  estimatedEnd: string | null;
 }
 
-export function DashboardPage({ onNavigate }: DashboardPageProps) {
-  const [projects, setProjects] = useState<Project[]>([
-    {
-      id: '1',
-      title: 'Mumbai Metro Phase IV Extension',
-      description: 'Underground metro corridor connecting Bandra to SEEPZ with 12 stations.',
-      location: 'Mumbai, Maharashtra',
-      budget: '₹8,500 Cr',
-      timeline: '36 months',
-      status: 'ongoing',
-      type: 'Infrastructure',
-      team: 450,
-      completion: 65,
-      startDate: '2023-01-15',
-      estimatedEnd: '2026-01-15'
-    },
-    {
-      id: '2',
-      title: 'Bangalore IT Park Complex',
-      description: 'Modern IT campus with sustainable design and smart building features.',
-      location: 'Bangalore, Karnataka',
-      budget: '₹1,200 Cr',
-      timeline: '24 months',
-      status: 'upcoming',
-      type: 'Commercial',
-      team: 200,
-      completion: 0,
-      startDate: '2024-06-01',
-      estimatedEnd: '2026-06-01'
-    },
-    {
-      id: '3',
-      title: 'Delhi Affordable Housing Project',
-      description: 'Smart city compliant residential towers with 2000+ units.',
-      location: 'Dwarka, New Delhi',
-      budget: '₹950 Cr',
-      timeline: '30 months',
-      status: 'ongoing',
-      type: 'Residential',
-      team: 320,
-      completion: 42,
-      startDate: '2023-06-01',
-      estimatedEnd: '2025-12-01'
-    }
-  ]);
+export function DashboardPage({ onNavigate, validate }: DashboardPageProps) {
+
+  const [currentProjects, setCurrentProjects] = useState([]);
+  const [completedProjects, setCompletedProjects] = useState([]);
+  const [upcomingProjects, setUpcomingProjects] = useState([]);
+  const [projects, setProjects] = useState([]);
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -109,6 +70,34 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
     estimatedEnd: ''
   });
 
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const { data } = await api.get("/project/all-project");
+        setProjects(data);
+      } catch (err) {
+        console.error("Error fetching projects:", err);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+
+    if (Array.isArray(projects) && projects.length > 0) {
+      const ongoing: [] = projects.filter(p => p.status === "ongoing");
+      const completed: [] = projects.filter(p => p.status === "completed");
+      const upcoming: [] = projects.filter(p => p.status === "upcoming");
+
+      setCompletedProjects(completed);
+      setCurrentProjects(ongoing);
+      setUpcomingProjects(upcoming);
+    }
+
+  }, [projects])
+
   const handleAddProject = () => {
     if (!newProject.title || !newProject.location || !newProject.budget) {
       toast.error('Please fill in all required fields');
@@ -120,7 +109,7 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
       ...newProject
     };
 
-    setProjects([...projects, project]);
+    // setProjects([...projects, project]);
     setNewProject({
       title: '',
       description: '',
@@ -143,23 +132,19 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
     toast.success('Project deleted successfully');
   };
 
-  const handleToggleStatus = (id: string, newStatus: 'ongoing' | 'upcoming' | 'completed') => {
-    setProjects(projects.map(p => 
-      p.id === id ? { ...p, status: newStatus } : p
-    ));
-    toast.success('Project status updated');
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'ongoing':
-        return <Badge className="status-ongoing">Ongoing</Badge>;
-      case 'upcoming':
-        return <Badge className="status-upcoming">Upcoming</Badge>;
-      case 'completed':
-        return <Badge className="status-completed">Completed</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
+  const handleToggleStatus = async (id: string, newStatus: "ongoing" | "upcoming" | "completed") => {
+    try {
+      const response = await api.post(`/project/${id}/update`, { status: newStatus });
+      // Update local state
+      setProjects((prevProjects) =>
+        prevProjects.map((p) =>
+          p._id === id ? { ...p, status: response.data.status } : p
+        )
+      );
+      toast.success("Project status updated");
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Something went wrong");
     }
   };
 
@@ -168,10 +153,7 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
     ongoing: projects.filter(p => p.status === 'ongoing').length,
     upcoming: projects.filter(p => p.status === 'upcoming').length,
     completed: projects.filter(p => p.status === 'completed').length,
-    totalBudget: projects.reduce((sum, p) => {
-      const budget = parseFloat(p.budget.replace(/[₹,\s]/g, '').replace('Cr', ''));
-      return sum + budget;
-    }, 0)
+    totalBudget: 0
   };
 
   return (
@@ -190,7 +172,7 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
                 Manage and monitor your construction projects
               </p>
             </motion.div>
-            
+
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="bg-primary hover:bg-primary/90">
@@ -208,7 +190,7 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
                     <Input
                       id="title"
                       value={newProject.title}
-                      onChange={(e) => setNewProject({...newProject, title: e.target.value})}
+                      onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
                       placeholder="Enter project title"
                     />
                   </div>
@@ -217,7 +199,7 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
                     <Textarea
                       id="description"
                       value={newProject.description}
-                      onChange={(e) => setNewProject({...newProject, description: e.target.value})}
+                      onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
                       placeholder="Enter project description"
                     />
                   </div>
@@ -226,7 +208,7 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
                     <Input
                       id="location"
                       value={newProject.location}
-                      onChange={(e) => setNewProject({...newProject, location: e.target.value})}
+                      onChange={(e) => setNewProject({ ...newProject, location: e.target.value })}
                       placeholder="City, State"
                     />
                   </div>
@@ -235,7 +217,7 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
                     <Input
                       id="budget"
                       value={newProject.budget}
-                      onChange={(e) => setNewProject({...newProject, budget: e.target.value})}
+                      onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })}
                       placeholder="₹100 Cr"
                     />
                   </div>
@@ -244,13 +226,13 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
                     <Input
                       id="timeline"
                       value={newProject.timeline}
-                      onChange={(e) => setNewProject({...newProject, timeline: e.target.value})}
+                      onChange={(e) => setNewProject({ ...newProject, timeline: e.target.value })}
                       placeholder="24 months"
                     />
                   </div>
                   <div>
                     <Label htmlFor="type">Project Type</Label>
-                    <Select value={newProject.type} onValueChange={(value) => setNewProject({...newProject, type: value})}>
+                    <Select value={newProject.type} onValueChange={(value) => setNewProject({ ...newProject, type: value })}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select type" />
                       </SelectTrigger>
@@ -269,7 +251,7 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
                       id="team"
                       type="number"
                       value={newProject.team}
-                      onChange={(e) => setNewProject({...newProject, team: parseInt(e.target.value) || 0})}
+                      onChange={(e) => setNewProject({ ...newProject, team: parseInt(e.target.value) || 0 })}
                       placeholder="200"
                     />
                   </div>
@@ -279,7 +261,7 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
                       id="startDate"
                       type="date"
                       value={newProject.startDate}
-                      onChange={(e) => setNewProject({...newProject, startDate: e.target.value})}
+                      onChange={(e) => setNewProject({ ...newProject, startDate: e.target.value })}
                     />
                   </div>
                   <div>
@@ -288,7 +270,7 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
                       id="estimatedEnd"
                       type="date"
                       value={newProject.estimatedEnd}
-                      onChange={(e) => setNewProject({...newProject, estimatedEnd: e.target.value})}
+                      onChange={(e) => setNewProject({ ...newProject, estimatedEnd: e.target.value })}
                     />
                   </div>
                 </div>
@@ -415,212 +397,61 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
             </TabsList>
 
             <TabsContent value="all" className="space-y-6">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-bold text-gray-900 mb-4">All Projects</h2>
+                <p className="text-xl text-gray-600">
+                  Showcasing all our construction projects.
+                </p>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {projects.map((project, index) => (
-                  <motion.div
-                    key={project.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                  >
-                    <Card className="enterprise-shadow hover:enterprise-shadow-lg transition-all duration-200">
-                      <CardHeader>
-                        <div className="flex justify-between items-start">
-                          <div className="flex-1">
-                            <CardTitle className="text-lg line-clamp-2">{project.title}</CardTitle>
-                            <div className="flex items-center mt-2">
-                              {getStatusBadge(project.status)}
-                              <Badge variant="outline" className="ml-2">{project.type}</Badge>
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button size="sm" variant="outline">
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <Button 
-                              size="sm" 
-                              variant="outline" 
-                              onClick={() => handleDeleteProject(project.id)}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      
-                      <CardContent className="space-y-4">
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                          {project.description}
-                        </p>
-                        
-                        <div className="grid grid-cols-2 gap-3 text-sm">
-                          <div className="flex items-center text-muted-foreground">
-                            <MapPin className="w-4 h-4 mr-2" />
-                            <span className="truncate">{project.location}</span>
-                          </div>
-                          <div className="flex items-center text-muted-foreground">
-                            <IndianRupee className="w-4 h-4 mr-2" />
-                            <span>{project.budget}</span>
-                          </div>
-                          <div className="flex items-center text-muted-foreground">
-                            <Calendar className="w-4 h-4 mr-2" />
-                            <span>{project.timeline}</span>
-                          </div>
-                          <div className="flex items-center text-muted-foreground">
-                            <Users className="w-4 h-4 mr-2" />
-                            <span>{project.team} team</span>
-                          </div>
-                        </div>
-                        
-                        {project.status !== 'upcoming' && (
-                          <div className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Progress</span>
-                              <span className="font-medium">{project.completion}%</span>
-                            </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div
-                                className="bg-primary h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${project.completion}%` }}
-                              />
-                            </div>
-                          </div>
-                        )}
-                        
-                        <div className="space-y-2">
-                          <Label className="text-sm">Quick Status Change</Label>
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              variant={project.status === 'upcoming' ? 'default' : 'outline'}
-                              onClick={() => handleToggleStatus(project.id, 'upcoming')}
-                              className="flex-1"
-                            >
-                              Upcoming
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant={project.status === 'ongoing' ? 'default' : 'outline'}
-                              onClick={() => handleToggleStatus(project.id, 'ongoing')}
-                              className="flex-1"
-                            >
-                              Ongoing
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant={project.status === 'completed' ? 'default' : 'outline'}
-                              onClick={() => handleToggleStatus(project.id, 'completed')}
-                              className="flex-1"
-                            >
-                              Complete
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
+                {projects.map((project) => (
+                  <ProjectCard project={project} footer={true} handleToggleStatus={(id, status) => handleToggleStatus(id, status)} />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="ongoing" className="space-y-6">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-bold text-gray-900 mb-4">Ongoing Projects</h2>
+                <p className="text-xl text-gray-600">
+                  Showcasing our ongoing construction projects.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {currentProjects.map((project) => (
+                  <ProjectCard project={project} footer={true} handleToggleStatus={(id, status) => handleToggleStatus(id, status)} />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="completed" className="space-y-6">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-bold text-gray-900 mb-4">Completed Projects</h2>
+                <p className="text-xl text-gray-600">
+                  Showcasing our successfully completed construction projects.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {completedProjects.map((project) => (
+                  <ProjectCard project={project} footer={true} handleToggleStatus={(id, status) => handleToggleStatus(id, status)} />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="upcoming" className="space-y-6">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-bold text-gray-900 mb-4">Upcoming Projects</h2>
+                <p className="text-xl text-gray-600">
+                  Showcasing our upcoming construction projects.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {upcomingProjects.map((project) => (
+                  <ProjectCard project={project} footer={true} handleToggleStatus={(id, status) => handleToggleStatus(id, status)} />
                 ))}
               </div>
             </TabsContent>
 
-            {['ongoing', 'upcoming', 'completed'].map(status => (
-              <TabsContent key={status} value={status} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {projects
-                    .filter(p => p.status === status)
-                    .map((project, index) => (
-                      <motion.div
-                        key={project.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: index * 0.1 }}
-                      >
-                        <Card className="enterprise-shadow hover:enterprise-shadow-lg transition-all duration-200">
-                          <CardHeader>
-                            <div className="flex justify-between items-start">
-                              <div className="flex-1">
-                                <CardTitle className="text-lg line-clamp-2">{project.title}</CardTitle>
-                                <div className="flex items-center mt-2">
-                                  {getStatusBadge(project.status)}
-                                  <Badge variant="outline" className="ml-2">{project.type}</Badge>
-                                </div>
-                              </div>
-                              <div className="flex gap-2">
-                                <Button size="sm" variant="outline">
-                                  <Edit className="w-4 h-4" />
-                                </Button>
-                                <Button 
-                                  size="sm" 
-                                  variant="outline" 
-                                  onClick={() => handleDeleteProject(project.id)}
-                                  className="text-red-600 hover:text-red-700"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            </div>
-                          </CardHeader>
-                          
-                          <CardContent className="space-y-4">
-                            <p className="text-sm text-muted-foreground line-clamp-2">
-                              {project.description}
-                            </p>
-                            
-                            <div className="grid grid-cols-2 gap-3 text-sm">
-                              <div className="flex items-center text-muted-foreground">
-                                <MapPin className="w-4 h-4 mr-2" />
-                                <span className="truncate">{project.location}</span>
-                              </div>
-                              <div className="flex items-center text-muted-foreground">
-                                <IndianRupee className="w-4 h-4 mr-2" />
-                                <span>{project.budget}</span>
-                              </div>
-                              <div className="flex items-center text-muted-foreground">
-                                <Calendar className="w-4 h-4 mr-2" />
-                                <span>{project.timeline}</span>
-                              </div>
-                              <div className="flex items-center text-muted-foreground">
-                                <Users className="w-4 h-4 mr-2" />
-                                <span>{project.team} team</span>
-                              </div>
-                            </div>
-                            
-                            {project.status !== 'upcoming' && (
-                              <div className="space-y-2">
-                                <div className="flex justify-between text-sm">
-                                  <span className="text-muted-foreground">Progress</span>
-                                  <span className="font-medium">{project.completion}%</span>
-                                </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2">
-                                  <div
-                                    className="bg-primary h-2 rounded-full transition-all duration-300"
-                                    style={{ width: `${project.completion}%` }}
-                                  />
-                                </div>
-                              </div>
-                            )}
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    ))}
-                </div>
-                
-                {projects.filter(p => p.status === status).length === 0 && (
-                  <div className="text-center py-12">
-                    <AlertCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-foreground mb-2">
-                      No {status} projects
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {status === 'ongoing' && 'No projects are currently in progress.'}
-                      {status === 'upcoming' && 'No projects are scheduled to start.'}
-                      {status === 'completed' && 'No projects have been completed yet.'}
-                    </p>
-                  </div>
-                )}
-              </TabsContent>
-            ))}
           </Tabs>
         </div>
       </section>
