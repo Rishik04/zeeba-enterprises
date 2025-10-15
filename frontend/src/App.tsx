@@ -64,7 +64,7 @@ export default function App() {
     if (!token) return;
     console.log("validating")
     await api
-      .get("/auth/validate")
+      .get("user/auth/validate")
       .then(() => setIsAuthenticated(true))
       .catch(() => {
         localStorage.removeItem("token");
@@ -72,6 +72,12 @@ export default function App() {
       });
   }
 
+  useEffect(() => {
+    const check = async () => {
+      await validate();
+    }
+    check()
+  }, [])
 
 
   // Render current page with transitions
@@ -82,7 +88,7 @@ export default function App() {
       projects: <ProjectsPage onNavigate={handleNavigate} />,
       admin: <AdminLogin onNavigate={handleNavigate} validate={validate} isAuthenticated={isAuthenticated} />,
       dashboard: isAuthenticated
-        ? <DashboardPage onNavigate={handleNavigate} />
+        ? <DashboardPage onNavigate={handleNavigate} validate={validate} />
         : (
           <div className="p-10 text-center">
             <h2 className="text-2xl font-bold text-red-600">Access Denied</h2>

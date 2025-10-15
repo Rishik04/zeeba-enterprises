@@ -1,5 +1,9 @@
 import express from "express";
-import { createProject, getAllProjects } from "../services/project.service.js";
+import {
+  createProject,
+  getAllProjects,
+  updateProjectStatusById,
+} from "../services/project.service.js";
 import multer from "multer";
 
 const projectRouter = express.Router();
@@ -29,6 +33,18 @@ projectRouter.post(
 projectRouter.get("/all-project", async (req, res) => {
   try {
     const projects = await getAllProjects();
+    res.status(200).json(projects);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+projectRouter.post("/:id/update", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { status } = req.body;
+    const projects = await updateProjectStatusById(id, status);
     res.status(200).json(projects);
   } catch (error) {
     console.error(error);
