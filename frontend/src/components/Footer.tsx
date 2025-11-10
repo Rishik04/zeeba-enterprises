@@ -1,4 +1,4 @@
-import { Building2, Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Trophy, Twitter } from 'lucide-react';
+import { Building2, Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Trophy, Twitter, Youtube } from 'lucide-react';
 import { motion } from 'motion/react';
 import logo from "../assets/logo.png";
 
@@ -8,6 +8,14 @@ interface FooterProps {
 }
 
 export function Footer({ onNavigate }: FooterProps) {
+  const socials = [
+    { icon: Facebook, href: "#" },
+    // { icon: Twitter, href: "#" },
+    { icon: Instagram, href: "https://www.instagram.com/zebaenterprises2025/" },
+    // { icon: Linkedin, href: "#" },
+    { icon: Youtube, href: "#" }
+  ];
+
   return (
     <footer className="bg-primary text-white relative overflow-hidden">
       {/* Background pattern */}
@@ -60,15 +68,19 @@ export function Footer({ onNavigate }: FooterProps) {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="flex space-x-4"
             >
-              {[Facebook, Twitter, Instagram, Linkedin].map((Icon, index) => (
-                <motion.div
+              {socials.map(({ icon: Icon, href }, index) => (
+                <motion.a
                   key={index}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.1, y: -2 }}
                   className="w-10 h-10 bg-cyan-800/50 rounded-lg flex items-center justify-center cursor-pointer hover:bg-cyan-700/50 transition-all duration-300"
                 >
                   <Icon className="w-5 h-5 text-cyan-200 hover:text-white" />
-                </motion.div>
+                </motion.a>
               ))}
+
             </motion.div>
           </div>
 
@@ -110,15 +122,15 @@ export function Footer({ onNavigate }: FooterProps) {
                 <div className="w-8 h-8 bg-cyan-800/50 rounded-lg flex items-center justify-center mr-3">
                   <Phone className="w-4 h-4 text-cyan-500" />
                 </div>
-                <span className="text-gray-300 mr-1" onClick={(e)=>window.location.href="tel:9801359772"}>9801359772</span>
+                <span className="text-gray-300 mr-1" onClick={(e) => window.location.href = "tel:9801359772"}>9801359772</span>
                 <span className="text-gray-300">/</span>
-                <span className="text-gray-300 ml-1" onClick={(e)=>window.location.href="tel:9693388722"}>9693388722</span>
+                <span className="text-gray-300 ml-1" onClick={(e) => window.location.href = "tel:9693388722"}>9693388722</span>
               </div>
               <div className="flex items-center cursor-pointer">
                 <div className="w-8 h-8 bg-cyan-800/50 rounded-lg flex items-center justify-center mr-3">
                   <Mail className="w-4 h-4 text-cyan-500" />
                 </div>
-                <span className="text-gray-300" onClick={(e)=>window.location.href="mailto:zebaenterprises5@gmail.com"}>zebaenterprises5@gmail.com</span>
+                <span className="text-gray-300" onClick={(e) => window.location.href = "mailto:zebaenterprises5@gmail.com"}>zebaenterprises5@gmail.com</span>
               </div>
               <div className="flex items-start">
                 <div className="w-8 h-8 bg-cyan-800/50 rounded-lg flex items-center justify-center mr-3 mt-1">

@@ -1,15 +1,20 @@
 import axios from 'axios';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { DashboardLayout } from './components/admin/DashboardLayout';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { AboutPage } from './components/pages/AboutPage';
+import { AdminCareersPage } from './components/pages/admin/AdminCareerPage';
+import { AdminTendersPage } from './components/pages/admin/AdminTenderPage';
 import { AdminLogin } from './components/pages/AdminLogin';
+import CareersPage from './components/pages/CareerPage';
 import { ContactPage } from './components/pages/ContactPage';
-import { DashboardPage } from './components/pages/DashboardPage';
+import { DashboardPage } from './components/pages/admin/DashboardPage';
 import { HomePage } from './components/pages/HomePage';
 import { ProjectsPage } from './components/pages/ProjectsPage';
 import { ServicesPage } from './components/pages/ServicesPage';
+import TendersPage from './components/pages/TenderPage';
 import { Toaster } from './components/ui/sonner';
 
 export const api = axios.create({
@@ -87,22 +92,10 @@ export default function App() {
       services: <ServicesPage onNavigate={handleNavigate} />,
       projects: <ProjectsPage onNavigate={handleNavigate} />,
       admin: <AdminLogin onNavigate={handleNavigate} validate={validate} isAuthenticated={isAuthenticated} />,
-      dashboard: isAuthenticated
-        ? <DashboardPage onNavigate={handleNavigate} validate={validate} />
-        : (
-          <div className="p-10 text-center">
-            <h2 className="text-2xl font-bold text-red-600">Access Denied</h2>
-            <p className="text-gray-600">You must be logged in to view this page.</p>
-            <button
-              onClick={() => handleNavigate("home")}
-              className="mt-4 px-4 py-2 bg-green-700 text-white rounded-lg"
-            >
-              Go Home
-            </button>
-          </div>
-        ),
       contact: <ContactPage onNavigate={handleNavigate} />,
-      home: <HomePage onNavigate={handleNavigate} />
+      home: <HomePage onNavigate={handleNavigate} />,
+      career: <CareersPage onNavigate={handleNavigate} />,
+      tender: <TendersPage onNavigate={handleNavigate} />
     };
 
     return (
@@ -144,29 +137,37 @@ export default function App() {
     );
   }
 
-  return (
+
+  const isAdminRoute = ["dashboard", "admin/careers", "admin/tenders", "admin/manage"].includes(currentPage);
+
+  const adminPage = isAuthenticated ? (
+    <DashboardLayout
+      onNavigate={handleNavigate}
+      activeKey={currentPage}
+    >
+      {currentPage === "dashboard" && (
+        <DashboardPage onNavigate={handleNavigate} validate={validate} />
+      )}
+      {currentPage === "admin/careers" && (
+        <AdminCareersPage onNavigate={handleNavigate} apiBase="/api/admin" />
+      )}
+      {currentPage === "admin/tenders" && (
+        <AdminTendersPage onNavigate={handleNavigate} apiBase="/api/admin" />
+      )}
+    </DashboardLayout>
+  ) : (
+    <div className="p-10 text-center">…access denied…</div>
+  );
+
+  return isAdminRoute ? (
+    adminPage
+  ) : (
     <div className="min-h-screen bg-white">
       <Header currentPage={currentPage} onNavigate={handleNavigate} isAuthenticated={isAuthenticated}
-        onLogout={() => {
-          localStorage.removeItem("token");
-          setIsAuthenticated(false);
-          handleNavigate("home");
-        }} />
-      <main className="flex-1">
-        {renderCurrentPage()}
-      </main>
+        onLogout={() => { localStorage.removeItem("token"); setIsAuthenticated(false); handleNavigate("home"); }} />
+      <main className="flex-1">{renderCurrentPage()}</main>
       <Footer onNavigate={handleNavigate} />
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          style: {
-            background: '#065f46',
-            color: 'white',
-            border: 'none',
-            fontFamily: 'Inter, sans-serif',
-          },
-        }}
-      />
+      <Toaster position="bottom-right" toastOptions={{ style: { background: '#065f46', color: 'white', border: 'none', fontFamily: 'Inter, sans-serif' } }} />
     </div>
   );
 }
