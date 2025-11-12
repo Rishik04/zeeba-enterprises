@@ -1,9 +1,9 @@
 import {
-    FileText,
-    Info,
-    Loader2,
-    Shield,
-    Upload
+  FileText,
+  Info,
+  Loader2,
+  Shield,
+  Upload
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -134,87 +134,111 @@ export function ApplyModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Apply for {jobTitle || "this role"}</DialogTitle>
-          <DialogDescription>
-            Fill in your details and attach your resume. Our team will get back to you shortly.
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent
+        className="w-full max-w-4xl sm:mx-4 sm:max-w-4xl mx-2 max-h-[100vh] rounded-lg overflow-hidden p-0"
+      >
+        <div className="flex flex-col h-full max-h-[100vh]">
+          {/* Header */}
+          <div className="px-6 py-4 border-b">
+            <DialogHeader className="p-0">
+              <DialogTitle className="text-lg font-semibold">
+                Apply for {jobTitle || "this role"}
+              </DialogTitle>
+              <DialogDescription className="text-sm text-gray-600">
+                Fill in your details and attach your resume. Our team will get back to you shortly.
+              </DialogDescription>
+            </DialogHeader>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label>Name</Label>
-            <Input value={data.name} onChange={(e) => setField("name", e.target.value)} placeholder="Your full name" />
-          </div>
-          <div>
-            <Label>Email</Label>
-            <Input type="email" value={data.email} onChange={(e) => setField("email", e.target.value)} placeholder="name@example.com" />
-          </div>
-          <div>
-            <Label>Phone</Label>
-            <Input value={data.phone} onChange={(e) => setField("phone", e.target.value)} placeholder="e.g. +91 98765 43210" />
-          </div>
-          <div>
-            <Label>Location (City)</Label>
-            <Input value={data.location} onChange={(e) => setField("location", e.target.value)} placeholder="Your current city" />
-          </div>
-          <div>
-            <Label>Experience</Label>
-            <Select value={data.experience} onValueChange={(v: any) => setField("experience", v)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="0-2">0–2 years</SelectItem>
-                <SelectItem value="2-5">2–5 years</SelectItem>
-                <SelectItem value="5+">5+ years</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Expected CTC (Optional)</Label>
-            <Input value={data.expectedCtc || ""} onChange={(e) => setField("expectedCtc", e.target.value)} placeholder="e.g. 5 LPA" />
-          </div>
-          <div>
-            <Label>Notice Period (Optional)</Label>
-            <Input value={data.notice || ""} onChange={(e) => setField("notice", e.target.value)} placeholder="e.g. 30 days" />
-          </div>
-          <div className="md:col-span-2">
-            <Label>Cover Letter (Optional)</Label>
-            <Textarea value={data.coverLetter || ""} onChange={(e) => setField("coverLetter", e.target.value)} rows={4} placeholder="Tell us briefly about your strengths and relevant experience." />
-          </div>
-          <div className="md:col-span-2">
-            <Label>Resume</Label>
-            <ResumeDropzone file={data.resume || null} setFile={(f) => setField("resume", f)} required />
-          </div>
-        </div>
+          {/* Horizontal content */}
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 overflow-y-auto">
+            {/* Left: Form */}
+            <div className="px-6 py-4 space-y-4 overflow-y-auto">
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <Label>Name</Label>
+                  <Input value={data.name} onChange={(e) => setField("name", e.target.value)} placeholder="Your full name" />
+                </div>
+                <div>
+                  <Label>Email</Label>
+                  <Input type="email" value={data.email} onChange={(e) => setField("email", e.target.value)} placeholder="name@example.com" />
+                </div>
+                <div>
+                  <Label>Phone</Label>
+                  <Input value={data.phone} onChange={(e) => setField("phone", e.target.value)} placeholder="e.g. +91 98765 43210" />
+                </div>
+                <div>
+                  <Label>Location</Label>
+                  <Input value={data.location} onChange={(e) => setField("location", e.target.value)} placeholder="City" />
+                </div>
+                <div>
+                  <Label>Experience</Label>
+                  <Select value={data.experience} onValueChange={(v: any) => setField("experience", v)}>
+                    <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0-2">0–2 years</SelectItem>
+                      <SelectItem value="2-5">2–5 years</SelectItem>
+                      <SelectItem value="5+">5+ years</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Expected CTC (Optional)</Label>
+                  <Input value={data.expectedCtc || ""} onChange={(e) => setField("expectedCtc", e.target.value)} placeholder="e.g. 5 LPA" />
+                </div>
+                <div>
+                  <Label>Notice Period (Optional)</Label>
+                  <Input value={data.notice || ""} onChange={(e) => setField("notice", e.target.value)} placeholder="e.g. 30 days" />
+                </div>
+              </div>
+            </div>
 
-        {loading && (
-          <div className="pt-2">
-            <Progress value={progress} className="h-2" />
+            {/* Right: Cover letter, resume, etc */}
+            <div className="px-6 py-4 border-l space-y-4 overflow-y-auto bg-gray-50">
+              <div>
+                <Label>Cover Letter (Optional)</Label>
+                <Textarea
+                  value={data.coverLetter || ""}
+                  onChange={(e) => setField("coverLetter", e.target.value)}
+                  rows={6}
+                  placeholder="Tell us about yourself..."
+                />
+              </div>
+
+              <div>
+                <Label>Resume</Label>
+                <ResumeDropzone file={data.resume || null} setFile={(f) => setField("resume", f)} required />
+              </div>
+
+              {loading && (
+                <div className="pt-2">
+                  <Progress value={progress} className="h-2" />
+                </div>
+              )}
+
+              <div className="text-xs text-gray-600 flex items-start gap-2 mt-2">
+                <Shield className="w-4 h-4 shrink-0" />
+                <p>Your information is protected and used only for recruitment.</p>
+              </div>
+            </div>
           </div>
-        )}
 
-        <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button
-            disabled={!canSubmit || loading}
-            onClick={handleSubmit}
-            className="cursor-pointer text-white border-none bg-cyan-600 hover:bg-cyan-700"
-          >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
-            <span className="ml-2">Submit Application</span>
-          </Button>
-        </DialogFooter>
-
-        <div className="flex items-start gap-2 text-xs text-gray-600 mt-2">
-          <Shield className="w-4 h-4 shrink-0" />
-          <p>Your information is protected and used only for recruitment. By applying, you consent to our privacy policy.</p>
+          {/* Footer */}
+          <div className="px-6 py-4 border-t bg-white flex gap-2 justify-end items-center">
+            <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+            <Button
+              disabled={!canSubmit || loading}
+              onClick={handleSubmit}
+              className="cursor-pointer text-white border-none bg-cyan-600 hover:bg-cyan-700"
+            >
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+              <span className="ml-2">Submit Application</span>
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
 // ---- Upload Resume (Talent Pool) Modal ----
