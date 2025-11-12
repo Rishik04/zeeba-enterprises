@@ -5,19 +5,18 @@ import {
     CheckCircle,
     ChevronDown,
     Clock,
+    Construction,
     FileText,
     GraduationCap,
-    HardHat,
     MapPin,
     Search,
     Shield,
     Star,
     ThumbsUp,
-    Truck,
     Users,
     Wrench
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -26,6 +25,8 @@ import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 // Reuse existing assets from your project (swap if needed)
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../App.tsx";
 import onsite from "../../assets/roadways.jpeg";
 import banner from "../../assets/site1.jpeg";
 import { ApplyModal, UploadResumeModal } from "../ApplyForm.tsx";
@@ -44,78 +45,32 @@ interface Job {
     postedOn: string; // ISO date
     highlights: string[];
     description: string;
-    icon: React.ComponentType<any>;
+    icon?: React.ComponentType<any>;
 }
 
-const JOBS: Job[] = [
-    {
-        id: "1",
-        title: "Site Engineer (Roads & Highways)",
-        department: "Construction",
-        location: "Giridih, Jharkhand",
-        type: "Full-time",
-        experience: "2-5",
-        postedOn: "2025-11-05",
-        highlights: ["AutoCAD / Quantity Takeoff", "Vendor Coordination", "QA/QC"],
-        description:
-            "Oversee execution of urban and highway road works including earthwork, GSB/WMM, and PQC. Coordinate with subcontractors, ensure quality and safety compliance, and support client billing/BOQ updates.",
-        icon: HardHat,
-    },
-    {
-        id: "2",
-        title: "Project Manager (Rail Infrastructure)",
-        department: "Railways",
-        location: "Dhanbad, Jharkhand",
-        type: "Full-time",
-        experience: "5+",
-        postedOn: "2025-11-06",
-        highlights: ["Track Laying", "Signalling Interfaces", "Stakeholder Management"],
-        description:
-            "Lead multi-disciplinary rail projects covering track, civil, and electrification interfaces. Own schedules, cost, risk registers, and client communications while guiding site teams toward milestones.",
-        icon: Building2,
-    },
-    {
-        id: "3",
-        title: "Safety Officer (PPE & Site Systems)",
-        department: "Safety",
-        location: "Ranchi, Jharkhand",
-        type: "Full-time",
-        experience: "2-5",
-        postedOn: "2025-11-03",
-        highlights: ["Toolbox Talks", "Permits", "Incident Reporting"],
-        description:
-            "Implement safety plans, conduct daily toolbox talks, maintain permits, and ensure statutory compliance across sites. Drive a safety-first culture with proactive risk controls.",
-        icon: Shield,
-    },
-    {
-        id: "4",
-        title: "Pump Technician (Installation & Commissioning)",
-        department: "Engineering",
-        location: "Bokaro, Jharkhand",
-        type: "Contract",
-        experience: "0-2",
-        postedOn: "2025-10-31",
-        highlights: ["Pump Alignment", "Testing", "Documentation"],
-        description:
-            "Assist in pump system installation, alignment, testing and documentation for industrial water systems and dewatering setups.",
-        icon: Wrench,
-    },
-    {
-        id: "5",
-        title: "Logistics Coordinator (Heavy Equipment)",
-        department: "Logistics",
-        location: "Hazaribagh, Jharkhand",
-        type: "Full-time",
-        experience: "2-5",
-        postedOn: "2025-11-02",
-        highlights: ["Fleet Scheduling", "Material Tracking", "Vendor Liaison"],
-        description:
-            "Schedule heavy vehicles and ensure on-time delivery of materials/equipment to sites. Maintain logs, optimize routes, and coordinate with stores and site engineers.",
-        icon: Truck,
-    },
-];
+const fetchJobs = async () => {
+    const res = await api.get("/career/all-job");
+    return res.data;
+}
 
-function CareersPage({ onNavigate }: CareersPageProps) {
+function safeIcon(icon?: Job["icon"]) {
+    if (!icon) return Building2; // fallback icon
+    if (typeof icon === "string") {
+        const map: Record<string, any> = {
+            construction: Construction
+        };
+        return map[icon] ?? Building2;
+    }
+    return icon as React.ComponentType<any>;
+}
+
+export function CareersPage({ onNavigate }: CareersPageProps) {
+    const { data = [], isLoading, isError, error } = useQuery<Job[]>({
+        queryKey: ['careers'],
+        queryFn: fetchJobs,
+        staleTime: 1000 * 60 * 2,
+        retry: 1,
+    });
     // Filters & search state
     const [q, setQ] = useState("");
     const [department, setDepartment] = useState<string>("all");
@@ -127,10 +82,11 @@ function CareersPage({ onNavigate }: CareersPageProps) {
     const [selectedJob, setSelectedJob] = useState<string | undefined>(undefined);
     const [uploadOpen, setUploadOpen] = useState(false);
 
-    const filtered = useMemo(() => {
-        let list = [...JOBS];
+    const jobsMemo = useMemo(() => data ?? [], [data]);
 
-        // text search
+
+    const filtered = useMemo(() => {
+        let list = [...jobsMemo];
         if (q.trim()) {
             const qq = q.toLowerCase();
             list = list.filter((j) =>
@@ -161,7 +117,7 @@ function CareersPage({ onNavigate }: CareersPageProps) {
         }
 
         return list;
-    }, [q, department, location, type, experience, sort]);
+    }, [q, department, location, type, experience, sort, jobsMemo]);
 
     const clearFilters = () => {
         setQ("");
@@ -171,6 +127,12 @@ function CareersPage({ onNavigate }: CareersPageProps) {
         setExperience("all");
         setSort("recent");
     };
+
+    const skeleton = (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Array.from({ length: 3 }).map((_, i) => <div key={i} className="animate-pulse bg-white rounded-lg p-6 shadow h-64" />)}
+        </div>
+    );
 
     return (
         <div className="min-h-screen">
@@ -196,7 +158,7 @@ function CareersPage({ onNavigate }: CareersPageProps) {
                                     <Users />
                                     <p className="text-lg text-cyan-500">Open roles</p>
                                 </div>
-                                <p className="text-4xl font-bold mt-2">{JOBS.length}</p>
+                                <p className="text-4xl font-bold mt-2">{jobsMemo.length}</p>
                             </CardContent>
                         </Card>
                         <Card className="bg-white/10 border-white/20 backdrop-blur">
@@ -310,60 +272,69 @@ function CareersPage({ onNavigate }: CareersPageProps) {
             </section>
 
             {/* Jobs list */}
+
             <section className="py-16 bg-gray-50">
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="flex items-center justify-between mb-8">
                         <h2 className="text-3xl font-bold text-gray-900">Open Positions</h2>
-                        <p className="text-gray-600">Showing {filtered.length} of {JOBS.length} roles</p>
+                        <p className="text-gray-600">Showing {filtered.length} of {jobsMemo.length} roles</p>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {filtered.map((job, idx) => {
-                            const Icon = job.icon;
-                            return (
-                                <motion.div
-                                    key={job.id}
-                                    initial={{ opacity: 0, y: 12 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: idx * 0.05 }}
-                                >
-                                    <Card className="hover:shadow-lg transition group">
-                                        <CardHeader className="pb-2">
-                                            <div className="flex items-start justify-between gap-4">
-                                                <div className="flex items-start gap-3">
-                                                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shrink-0">
-                                                        <Icon className="text-white w-6 h-6" />
-                                                    </div>
-                                                    <div>
-                                                        <CardTitle className="text-xl">{job.title}</CardTitle>
-                                                        <div className="flex flex-wrap gap-2 mt-2">
-                                                            <Badge variant="outline" className="gap-1"><Building2 className="w-4 h-4" /> {job.department}</Badge>
-                                                            <Badge variant="outline" className="gap-1"><MapPin className="w-4 h-4" /> {job.location}</Badge>
-                                                            <Badge variant="outline" className="gap-1"><Clock className="w-4 h-4" /> {job.type}</Badge>
+                    {isLoading ? (
+                        skeleton
+                    ) : isError ? (
+                        <div className="text-center text-red-600">Error: {error?.message}</div>
+                    ) : (
+                        <Suspense fallback={skeleton}>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                {filtered.map((job, idx) => {
+                                    const Icon = safeIcon(job.icon);
+                                    return (
+                                        <motion.div
+                                            key={job.id}
+                                            initial={{ opacity: 0, y: 12 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: idx * 0.05 }}
+                                        >
+                                            <Card className="hover:shadow-lg transition group">
+                                                <CardHeader className="pb-2">
+                                                    <div className="flex items-start justify-between gap-4">
+                                                        <div className="flex items-start gap-3">
+                                                            <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center shrink-0">
+                                                                <Icon className="text-white w-6 h-6" />
+                                                            </div>
+                                                            <div>
+                                                                <CardTitle className="text-xl">{job.title}</CardTitle>
+                                                                <div className="flex flex-wrap gap-2 mt-2">
+                                                                    <Badge variant="outline" className="gap-1"><Building2 className="w-4 h-4" /> {job.department}</Badge>
+                                                                    <Badge variant="outline" className="gap-1"><MapPin className="w-4 h-4" /> {job.location}</Badge>
+                                                                    <Badge variant="outline" className="gap-1"><Clock className="w-4 h-4" /> {job.type}</Badge>
+                                                                </div>
+                                                            </div>
                                                         </div>
+                                                        <span className="text-sm text-gray-500">Posted on {new Date(job.postedOn).toLocaleDateString()}</span>
                                                     </div>
-                                                </div>
-                                                <span className="text-sm text-gray-500">Posted on {new Date(job.postedOn).toLocaleDateString()}</span>
-                                            </div>
-                                        </CardHeader>
-                                        <CardContent className="space-y-5 pt-0">
-                                            <p className="text-gray-600">{job.description}</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {job.highlights.map((h) => (
-                                                    <Badge key={h} className="bg-cyan-50 text-cyan-700 border-cyan-200">{h}</Badge>
-                                                ))}
-                                            </div>
-                                            <div className="flex justify-between items-center pt-2">
-                                                <Button onClick={() => { setSelectedJob(job.title); setApplyOpen(true); }}>Apply Now</Button>
-                                                <ApplyModal open={applyOpen} onOpenChange={setApplyOpen} jobTitle={selectedJob} />
-                                                <Button variant="outline" className="cursor-pointer" onClick={() => onNavigate("contact")}>Refer a Candidate</Button>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
+                                                </CardHeader>
+                                                <CardContent className="space-y-5 pt-0">
+                                                    <p className="text-gray-600">{job.description}</p>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {job.highlights.map((h) => (
+                                                            <Badge key={h} className="bg-cyan-50 text-cyan-700 border-cyan-200">{h}</Badge>
+                                                        ))}
+                                                    </div>
+                                                    <div className="flex justify-between items-center pt-2">
+                                                        <Button onClick={() => { setSelectedJob(job.title); setApplyOpen(true); }}>Apply Now</Button>
+                                                        <ApplyModal open={applyOpen} onOpenChange={setApplyOpen} jobTitle={selectedJob} />
+                                                        <Button variant="outline" className="cursor-pointer" onClick={() => onNavigate("contact")}>Refer a Candidate</Button>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        </motion.div>
+                                    );
+                                })}
+                            </div>
+                        </Suspense>
+                    )}
 
                     {/* Don’t see a fit */}
                     <Card className="mt-8 border-dashed">
@@ -377,10 +348,10 @@ function CareersPage({ onNavigate }: CareersPageProps) {
                         </CardContent>
                     </Card>
                 </div>
-            </section>
+            </section >
 
             {/* Life at Zeba */}
-            <section className="py-20 bg-white">
+            < section className="py-20 bg-white" >
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="text-center mb-14">
                         <h2 className="text-4xl font-bold text-gray-900 mb-4">Life at Zeba Enterprises</h2>
@@ -469,10 +440,10 @@ function CareersPage({ onNavigate }: CareersPageProps) {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Hiring Process */}
-            <section className="py-20 bg-gray-50">
+            < section className="py-20 bg-gray-50" >
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="text-center mb-14">
                         <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Hiring Process</h2>
@@ -516,10 +487,10 @@ function CareersPage({ onNavigate }: CareersPageProps) {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* FAQ */}
-            <section className="py-20 bg-white">
+            < section className="py-20 bg-white" >
                 <div className="max-w-5xl mx-auto px-4">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl font-bold text-gray-900">Frequently Asked Questions</h2>
@@ -554,10 +525,10 @@ function CareersPage({ onNavigate }: CareersPageProps) {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* CTA */}
-            <section className="py-20 bg-primary">
+            < section className="py-20 bg-primary" >
                 <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
                     <h2 className="text-4xl font-bold text-white mb-6">Ready to build your career?</h2>
                     <p className="text-xl text-cyan-100 mb-8">
@@ -581,9 +552,7 @@ function CareersPage({ onNavigate }: CareersPageProps) {
                         </Button>
                     </div>
                 </div>
-            </section>
-        </div>
+            </section >
+        </div >
     );
 }
-
-export default CareersPage;

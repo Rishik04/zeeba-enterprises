@@ -1,42 +1,50 @@
-import { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { api } from '../../App';
 import road from "../../assets/road3.jpeg";
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import ProjectCard from '../ProjectCard';
+import { useQuery } from '@tanstack/react-query';
+const ProjectCard = React.lazy(() => import('../ProjectCard'));
 
 interface ProjectsPageProps {
   onNavigate: (page: string) => void;
 }
 
+export interface Project {
+  id: string | number;
+  title?: string;
+  description?: string;
+  status?: 'ongoing' | 'completed' | 'upcoming' | string;
+  location: String;
+  image: [String];
+  features: [String];
+  createdAt: String;
+  updatedAt: String;
+}
+
+const fetchProjects = async () => {
+  const res = await api.get('/project/all-project');
+  return Array.isArray(res.data) ? res.data as Project[] : [];
+}
+
 export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
-  const [selectedProject, setSelectedProject] = useState<number | null>(null);
-  const [currentProjects, setCurrentProjects] = useState([]);
-  const [completedProjects, setCompletedProjects] = useState([]);
-  const [upcomingProjects, setUpcomingProjects] = useState([]);
+  const { data = [], isLoading, isError, error } = useQuery<Project[]>({
+    queryKey: ['projects'],
+    queryFn: fetchProjects,
+    staleTime: 1000 * 60 * 2,
+    retry: 1,
+  });
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const { data } = await api.get("/project/all-project");
+  const currentProjects = data.filter(p => p.status === 'ongoing');
+  const completedProjects = data.filter(p => p.status === 'completed');
+  const upcomingProjects = data.filter(p => p.status === 'upcoming');
 
-        if (Array.isArray(data) && data.length > 0) {
-          const ongoing: [] = data.filter(p => p.status === "ongoing");
-          const completed: [] = data.filter(p => p.status === "completed");
-          const upcoming: [] = data.filter(p => p.status === "upcoming");
-
-          setCurrentProjects(ongoing);
-          setCompletedProjects(completed);
-          setUpcomingProjects(upcoming);
-        }
-      } catch (err) {
-        console.error("Error fetching projects:", err);
-      }
-    };
-
-    fetchProjects();
-  }, []);
+  const skeleton = (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {Array.from({ length: 3 }).map((_, i) => <div key={i} className="animate-pulse bg-white rounded-lg p-6 shadow h-64" />)}
+    </div>
+  );
 
   return (
     <div className="min-h-screen">
@@ -97,45 +105,52 @@ export function ProjectsPage({ onNavigate }: ProjectsPageProps) {
             <TabsContent value="current">
               <div className="text-center mb-12">
                 <h2 className="text-4xl font-bold text-gray-900 mb-4">Current Projects</h2>
-                <p className="text-xl text-gray-600">
-                  Take a look at our ongoing projects and their progress.
-                </p>
+                <p className="text-xl text-gray-600">Take a look at our ongoing projects and their progress.</p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {currentProjects.map((project) => (
-                  <ProjectCard key={project.id} project={project} status={"ongoing"} />
-                ))}
-              </div>
+
+              {isLoading ? (
+                skeleton
+              ) : isError ? (
+                <div className="text-center text-red-600">Error: {error?.message}</div>
+              ) : (
+                <Suspense fallback={skeleton}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {currentProjects.map(p => <ProjectCard key={p._id} project={p} status="ongoing" />)}
+                  </div>
+                </Suspense>
+              )}
             </TabsContent>
 
+            {/* Completed */}
             <TabsContent value="completed">
               <div className="text-center mb-12">
                 <h2 className="text-4xl font-bold text-gray-900 mb-4">Completed Projects</h2>
-                <p className="text-xl text-gray-600">
-                  Showcasing our successfully completed construction projects.
-                </p>
+                <p className="text-xl text-gray-600">Showcasing our successfully completed construction projects.</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {completedProjects.map((project) => (
-                  <ProjectCard key={project.id} project={project} status={"completed"} />
-                ))}
-              </div>
+              {isLoading ? skeleton : (
+                <Suspense fallback={skeleton}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {completedProjects.map(p => <ProjectCard key={p._id} project={p} status="completed" />)}
+                  </div>
+                </Suspense>
+              )}
             </TabsContent>
 
+            {/* Upcoming */}
             <TabsContent value="upcoming">
               <div className="text-center mb-12">
                 <h2 className="text-4xl font-bold text-gray-900 mb-4">Upcoming Projects</h2>
-                <p className="text-xl text-gray-600">
-                  Showcasing our upcoming construction projects.
-                </p>
+                <p className="text-xl text-gray-600">Showcasing our upcoming construction projects.</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {upcomingProjects.map((project) => (
-                  <ProjectCard key={project.id} project={project} status={"upcoming"} />
-                ))}
-              </div>
+              {isLoading ? skeleton : (
+                <Suspense fallback={skeleton}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {upcomingProjects.map(p => <ProjectCard key={p.id} project={p} status="upcoming" />)}
+                  </div>
+                </Suspense>
+              )}
             </TabsContent>
           </Tabs>
         </div>

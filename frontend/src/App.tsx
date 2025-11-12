@@ -8,7 +8,6 @@ import { AboutPage } from './components/pages/AboutPage';
 import { AdminCareersPage } from './components/pages/admin/AdminCareerPage';
 import { AdminTendersPage } from './components/pages/admin/AdminTenderPage';
 import { AdminLogin } from './components/pages/AdminLogin';
-import CareersPage from './components/pages/CareerPage';
 import { ContactPage } from './components/pages/ContactPage';
 import { DashboardPage } from './components/pages/admin/DashboardPage';
 import { HomePage } from './components/pages/HomePage';
@@ -16,6 +15,7 @@ import { ProjectsPage } from './components/pages/ProjectsPage';
 import { ServicesPage } from './components/pages/ServicesPage';
 import TendersPage from './components/pages/TenderPage';
 import { Toaster } from './components/ui/sonner';
+import { CareersPage } from './components/pages/CareerPage';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
