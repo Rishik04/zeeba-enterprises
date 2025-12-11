@@ -24,7 +24,7 @@ careerRouter.get("/all-job", async (req, res) => {
   }
 });
 
-careerRouter.post("/:id/update", async (req, res) => {
+careerRouter.post("/apply/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const { status } = req.body;
