@@ -130,7 +130,7 @@ export function Footer({ onNavigate }: FooterProps) {
                 <div className="w-8 h-8 bg-cyan-800/50 rounded-lg flex items-center justify-center mr-3">
                   <Mail className="w-4 h-4 text-cyan-500" />
                 </div>
-                <span className="text-gray-300" onClick={(e) => window.location.href = "mailto:zebaenterprises5@gmail.com"}>zebaenterprises5@gmail.com</span>
+                <span className="text-gray-300" onClick={(e) => window.location.href = "mailto:info@zebaenterprises.com"}>info@zebaenterprises.com</span>
               </div>
               <div className="flex items-start">
                 <div className="w-8 h-8 bg-cyan-800/50 rounded-lg flex items-center justify-center mr-3 mt-1">

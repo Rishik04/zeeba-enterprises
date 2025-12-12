@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from '../ui/textarea';
 import emailjs from "@emailjs/browser"
 import pump from "../../assets/pump.jpeg"
+import { Helmet } from 'react-helmet-async';
 
 interface ContactPageProps {
   onNavigate: (page: string) => void;
@@ -82,7 +83,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     {
       icon: Mail,
       title: 'Email',
-      details: ['zebaenterprises5@gmail.com'],
+      details: ['info@zebaenterprises.com'],
       description: 'Send us your project details'
     },
     {
@@ -108,14 +109,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     },
     {
       name: 'Project Branch Office',
-      address: 'Patna, Bihar, India',
-      phone: '9693388722',
-      services: ['On-site Coordination', 'Civil Engineering Support', 'Client Meetings']
-    },
-    {
-      name: 'Project Branch Office',
       address: 'Varanasi, Uttar Pradesh, India',
-      phone: '7061165579',
+      phone: '7061165579 / 9693388722',
       services: ['On-site Coordination', 'Civil Engineering Support', 'Client Meetings']
     }
   ];
@@ -140,171 +135,182 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
   ];
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-r from-gray-900 to-gray-700">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-          style={{
-            backgroundImage:`url(${pump})`
-          }}
-        />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Badge className="mb-4 bg-white/20 text-white border-white/40">Get In Touch</Badge>
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-            Contact <span className="block text-cyan-500">Zeba Enterprises</span>
-          </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Reach out to us for contracting, engineering, logistics, and consulting inquiries.
-            Our team will connect with you promptly.
-          </p>
-        </div>
-      </section>
+    <>
+      <Helmet>
+        <title>Contact Us | Zeba Enterprises – Offices in Dhanbad, Patna & Varanasi</title>
+        <meta name="description" content="Contact Zeba Enterprises for inquiries, project requirements, contracting services, engineering support, and business consulting. Offices in Jharkhand, Bihar, and Uttar Pradesh." />
+        <link rel="canonical" href="https://www.zebaenterprises.com/contact" />
+        <meta property="og:title" content="Contact Zeba Enterprises" />
+        <meta property="og:description" content="Reach out for contracting, engineering, logistics, pump works, and consulting services. Available Mon-Sat: 9AM–6PM." />
+        <meta property="og:url" content="https://www.zebaenterprises.com/contact" />
+        <meta property="og:image" content="https://www.zebaenterprises.com/og-image.jpg" />
+      </Helmet>
+      <div className="min-h-screen">
+        {/* Hero Section */}
+        <section className="relative py-20 bg-gradient-to-r from-gray-900 to-gray-700">
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+            style={{
+              backgroundImage: `url(${pump})`
+            }}
+          />
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <Badge className="mb-4 bg-white/20 text-white border-white/40">Get In Touch</Badge>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+              Contact <span className="block text-cyan-500">Zeba Enterprises</span>
+            </h1>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Reach out to us for contracting, engineering, logistics, and consulting inquiries.
+              Our team will connect with you promptly.
+            </p>
+          </div>
+        </section>
 
-      {/* Contact Information */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {contactInfo.map((info, index) => {
-            const Icon = info.icon;
-            return (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                    <Icon className="w-8 h-8 text-blue-600" />
-                  </div>
-                  <h3 className="font-bold mb-2">{info.title}</h3>
-                  <div className="space-y-1 mb-2">
-                    {info.details.map((detail, idx) => (
-                      <p key={idx} className="text-gray-900">{detail}</p>
-                    ))}
-                  </div>
-                  <p className="text-gray-600 text-sm">{info.description}</p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </section>
+        {/* Contact Information */}
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {contactInfo.map((info, index) => {
+              const Icon = info.icon;
+              return (
+                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+                  <CardContent className="p-6">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                      <Icon className="w-8 h-8 text-blue-600" />
+                    </div>
+                    <h3 className="font-bold mb-2">{info.title}</h3>
+                    <div className="space-y-1 mb-2">
+                      {info.details.map((detail, idx) => (
+                        <p key={idx} className="text-gray-900">{detail}</p>
+                      ))}
+                    </div>
+                    <p className="text-gray-600 text-sm">{info.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </section>
 
-      {/* Contact Form & Offices */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <div>
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <MessageSquare className="w-6 h-6 mr-2 text-cyan-600" />
-                  Send Us a Message
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form ref={form} onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="name">Full Name *</Label>
-                      <Input id="name" name='from_name' type="text" required />
+        {/* Contact Form & Offices */}
+        <section className="py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Contact Form */}
+            <div>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <MessageSquare className="w-6 h-6 mr-2 text-cyan-600" />
+                    Send Us a Message
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form ref={form} onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="name">Full Name *</Label>
+                        <Input id="name" name='from_name' type="text" required />
+                      </div>
+                      <div>
+                        <Label htmlFor="email">Email Address *</Label>
+                        <Input id="email" name='from_email' type="email" required />
+                      </div>
                     </div>
                     <div>
-                      <Label htmlFor="email">Email Address *</Label>
-                      <Input id="email" name='from_email' type="email" required />
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input id="phone" name='phone' type="tel" />
                     </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" name='phone' type="tel" />
-                  </div>
-                  <div>
-                    <Label htmlFor="projectType">Project Type</Label>
-                    <Select name='project_type' onValueChange={(e) => { setProjectType(e) }}>
-                      <SelectTrigger><SelectValue placeholder="Select project type" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="contracting">Contracting Works</SelectItem>
-                        <SelectItem value="civil">Civil Engineering</SelectItem>
-                        <SelectItem value="logistics">Logistics</SelectItem>
-                        <SelectItem value="consulting">Consulting</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="message">Project Details *</Label>
-                    <Textarea id="message" required rows={5} />
-                  </div>
-                  <Button type="submit" className="w-full bg-cyan-600 cursor-pointer" disabled={isSubmitting}>
-                    {isSubmitting ? 'Sending...' : <>Send Message <Send className="ml-2 w-4 h-4" /></>}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Offices */}
-          <div className="space-y-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Offices</h2>
-            {officeLocations.map((loc, i) => (
-              <Card key={i}>
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-lg mb-3">{loc.name}</h3>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-start">
-                      <MapPin className="w-4 h-4 mr-2 text-blue-600 mt-1" />
-                      <span className="text-gray-700">{loc.address}</span>
+                    <div>
+                      <Label htmlFor="projectType">Project Type</Label>
+                      <Select name='project_type' onValueChange={(e) => { setProjectType(e) }}>
+                        <SelectTrigger><SelectValue placeholder="Select project type" /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="contracting">Contracting Works</SelectItem>
+                          <SelectItem value="civil">Civil Engineering</SelectItem>
+                          <SelectItem value="logistics">Logistics</SelectItem>
+                          <SelectItem value="consulting">Consulting</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
-                    <div className="flex items-center">
-                      <Phone className="w-4 h-4 mr-2 text-blue-600" />
-                      <span className="text-gray-700">{loc.phone}</span>
+                    <div>
+                      <Label htmlFor="message">Project Details *</Label>
+                      <Textarea id="message" required rows={5} />
                     </div>
-                  </div>
-                  <h4 className="font-semibold mb-2">Services:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {loc.services.map((s, j) => (
-                      <Badge key={j} variant="outline" className="text-xs">{s}</Badge>
-                    ))}
-                  </div>
+                    <Button type="submit" className="w-full bg-cyan-600 cursor-pointer" disabled={isSubmitting}>
+                      {isSubmitting ? 'Sending...' : <>Send Message <Send className="ml-2 w-4 h-4" /></>}
+                    </Button>
+                  </form>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
 
-      {/* FAQ */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-            <p className="text-xl text-gray-600">Quick answers about our services and process.</p>
+            {/* Offices */}
+            <div className="space-y-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Offices</h2>
+              {officeLocations.map((loc, i) => (
+                <Card key={i}>
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-lg mb-3">{loc.name}</h3>
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-start">
+                        <MapPin className="w-4 h-4 mr-2 text-blue-600 mt-1" />
+                        <span className="text-gray-700">{loc.address}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Phone className="w-4 h-4 mr-2 text-blue-600" />
+                        <span className="text-gray-700">{loc.phone}</span>
+                      </div>
+                    </div>
+                    <h4 className="font-semibold mb-2">Services:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {loc.services.map((s, j) => (
+                        <Badge key={j} variant="outline" className="text-xs">{s}</Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-          <div className="space-y-6">
-            {faqs.map((faq, i) => (
-              <Card key={i}>
-                <CardContent className="p-6 flex items-start">
-                  <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-1" />
-                  <div>
-                    <h3 className="font-bold mb-2">{faq.question}</h3>
-                    <p className="text-gray-600">{faq.answer}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Support Section */}
-      <section className="py-20 bg-primary">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-white mb-6">24/7 Support & Safety Response</h2>
-          <p className="text-xl text-blue-100 mb-8">
-            For urgent site coordination, safety issues, or emergency project needs, our team is available around the clock.
-          </p>
-          <Button size="lg" className="bg-white text-cyan-600 cursor-pointer hover:bg-gray-100 px-8 py-3" onClick={() => window.open('tel:9693388722')}>
-            <Phone className="w-5 h-5 mr-2" />
-            Call Now: +91 9693388722
-          </Button>
-        </div>
-      </section>
-    </div>
+        {/* FAQ */}
+        <section className="py-20 bg-white">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+              <p className="text-xl text-gray-600">Quick answers about our services and process.</p>
+            </div>
+            <div className="space-y-6">
+              {faqs.map((faq, i) => (
+                <Card key={i}>
+                  <CardContent className="p-6 flex items-start">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-1" />
+                    <div>
+                      <h3 className="font-bold mb-2">{faq.question}</h3>
+                      <p className="text-gray-600">{faq.answer}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Support Section */}
+        <section className="py-20 bg-primary">
+          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <h2 className="text-4xl font-bold text-white mb-6">24/7 Support & Safety Response</h2>
+            <p className="text-xl text-blue-100 mb-8">
+              For urgent site coordination, safety issues, or emergency project needs, our team is available around the clock.
+            </p>
+            <Button size="lg" className="bg-white text-cyan-600 cursor-pointer hover:bg-gray-100 px-8 py-3" onClick={() => window.open('tel:9693388722')}>
+              <Phone className="w-5 h-5 mr-2" />
+              Call Now: +91 9693388722
+            </Button>
+          </div>
+        </section>
+      </div>
+    </>
   );
 }
