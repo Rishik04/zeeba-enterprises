@@ -17,7 +17,7 @@ import TendersPage from './components/pages/TenderPage';
 import { Toaster } from './components/ui/sonner';
 import { CareersPage } from './components/pages/CareerPage';
 import { Analytics } from '@vercel/analytics/react';
-
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -173,6 +173,7 @@ export default function App() {
   ) : (
     <div className="min-h-screen bg-white">
       <Analytics />
+      <SpeedInsights />
       <Header currentPage={currentPage} onNavigate={handleNavigate} isAuthenticated={isAuthenticated}
         onLogout={() => { localStorage.removeItem("token"); setIsAuthenticated(false); handleNavigate("home"); }} />
       <main className="flex-1">{renderCurrentPage()}</main>
