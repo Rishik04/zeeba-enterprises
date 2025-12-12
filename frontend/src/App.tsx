@@ -16,6 +16,8 @@ import { ServicesPage } from './components/pages/ServicesPage';
 import TendersPage from './components/pages/TenderPage';
 import { Toaster } from './components/ui/sonner';
 import { CareersPage } from './components/pages/CareerPage';
+import { Analytics } from '@vercel/analytics/react';
+
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -170,6 +172,7 @@ export default function App() {
     adminPage
   ) : (
     <div className="min-h-screen bg-white">
+      <Analytics />
       <Header currentPage={currentPage} onNavigate={handleNavigate} isAuthenticated={isAuthenticated}
         onLogout={() => { localStorage.removeItem("token"); setIsAuthenticated(false); handleNavigate("home"); }} />
       <main className="flex-1">{renderCurrentPage()}</main>
