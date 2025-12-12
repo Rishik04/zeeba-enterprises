@@ -30,6 +30,10 @@ api.interceptors.request.use((config) => {
 });
 
 export default function App() {
+  const externalRoutes: Record<string, string> = {
+    webmail: "https://mail.hostinger.com/v2/mailboxes/INBOX"
+  }
+
   const [currentPage, setCurrentPage] = useState(() => {
     const path = window.location.pathname.slice(1) || 'home';
     return path;
@@ -38,6 +42,10 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleNavigate = (page: string) => {
+    if (externalRoutes[page]) {
+      window.open(externalRoutes[page], "_blank", "noopener,noreferrer");
+      return;
+    }
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -84,7 +92,6 @@ export default function App() {
     check()
   }, [])
 
-
   // Render current page with transitions
   const renderCurrentPage = () => {
     const pageComponents = {
@@ -95,7 +102,7 @@ export default function App() {
       contact: <ContactPage onNavigate={handleNavigate} />,
       home: <HomePage onNavigate={handleNavigate} />,
       career: <CareersPage onNavigate={handleNavigate} />,
-      tender: <TendersPage onNavigate={handleNavigate} />
+      tender: <TendersPage onNavigate={handleNavigate} />,
     };
 
     return (

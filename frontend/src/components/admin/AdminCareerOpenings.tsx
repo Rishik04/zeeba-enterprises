@@ -1,6 +1,3 @@
-// -----------------------------------------------------------------------------
-// Admin Careers Page
-// -----------------------------------------------------------------------------
 import {
     Building2,
     Edit,
@@ -33,7 +30,7 @@ export interface AdminJob {
 
 export type Sector = "Roads" | "Railways" | "Water" | "Buildings" | "Mining";
 
-export function AdminOpeningTable({ apiBase = "/api/admin", openEdit }: { apiBase?: string, openEdit:any }) {
+export function AdminOpeningTable({ apiBase = "/api/admin", openEdit, jobs }: { apiBase?: string, openEdit: any, jobs:AdminJob }) {
     // const [jobs, setJobs] = useState<AdminJob[]>([]);
     const [loading, setLoading] = useState(false);
     const [q, setQ] = useState("");
@@ -53,53 +50,20 @@ export function AdminOpeningTable({ apiBase = "/api/admin", openEdit }: { apiBas
         description: "",
     });
 
-    const jobs: AdminJob[] = [
-        {
-            title: "Site Engineer (Roads)",
-            department: "Construction",
-            location: "Giridih, Jharkhand",
-            type: "Full-time",
-            experience: "2-5",
-            status: "Open",
-            postedOn: new Date().toISOString(),
-            highlights: ["AutoCAD", "QS", "QA/QC"],
-            description: "Execution oversight for urban road packages; quality and safety compliance.",
-        },
-    ]
-
-    // useEffect(() => {
-    //     const load = async () => {
-    //         try {
-    //             setLoading(true);
-    //             const r = await fetch(`${apiBase}/jobs`);
-    //             if (r.ok) {
-    //                 const data = await r.json();
-    //                 setJobs(Array.isArray(data) ? data : []);
-    //             } else {
-    //                 // seed with sample if API not ready
-    //                 setJobs([
-    //                     {
-    //                         title: "Site Engineer (Roads)",
-    //                         department: "Construction",
-    //                         location: "Giridih, Jharkhand",
-    //                         type: "Full-time",
-    //                         experience: "2-5",
-    //                         status: "Open",
-    //                         postedOn: new Date().toISOString(),
-    //                         highlights: ["AutoCAD", "QS", "QA/QC"],
-    //                         description: "Execution oversight for urban road packages; quality and safety compliance.",
-    //                     },
-    //                 ]);
-    //             }
-    //         } catch (e) {
-    //             setJobs([]);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     load();
-    // }, []);
-
+    // const jobs: AdminJob[] = [
+    //     {
+    //         title: "Site Engineer (Roads)",
+    //         department: "Construction",
+    //         location: "Giridih, Jharkhand",
+    //         type: "Full-time",
+    //         experience: "2-5",
+    //         status: "Open",
+    //         postedOn: new Date().toISOString(),
+    //         highlights: ["AutoCAD", "QS", "QA/QC"],
+    //         description: "Execution oversight for urban road packages; quality and safety compliance.",
+    //     },
+    // ]
+    
     const filtered = useMemo(() => {
         let list = [...jobs];
         if (q.trim()) {

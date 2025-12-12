@@ -1,5 +1,12 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://www.zebaenterprises.com/:path*",
+      "permanent": true,
+      "has": [
+        { "type": "host", "value": "zebaenterprises.com" }
+      ]
+    }
   ]
 }
