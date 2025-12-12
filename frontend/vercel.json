@@ -8,5 +8,11 @@
         { "type": "host", "value": "zebaenterprises.com" }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
