@@ -1,11 +1,10 @@
-// -----------------------------------------------------------------------------
-// Admin Careers Page
-// -----------------------------------------------------------------------------
+import { useQuery } from "@tanstack/react-query";
 import {
     Plus
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import { api } from "../../../App";
 import { AdminApplicationsTable } from "../../admin/AdminCareerApplication";
 import { AdminOpeningTable } from "../../admin/AdminCareerOpenings";
 import { Button } from "../../ui/button";
@@ -18,7 +17,9 @@ import { Textarea } from "../../ui/textarea";
 
 
 export type JobStatus = "Open" | "Closed";
-export interface AdminJob {
+export type Sector = "Roads" | "Railways" | "Water" | "Buildings" | "Mining";
+
+export interface Job {
     _id?: string;
     title: string;
     department: "Construction" | "Railways" | "Logistics" | "Engineering" | "Administration" | "Safety";
@@ -31,25 +32,33 @@ export interface AdminJob {
     description: string;
 }
 
-export type Sector = "Roads" | "Railways" | "Water" | "Buildings" | "Mining";
 
 interface AdminPagesProps {
     onNavigate: (page: string) => void;
-    // Optional: provide your API client. If not provided, component uses fetch.
-    apiBase?: string; // e.g. "/api/admin"
 }
+
 // Small utility
 const dateInputValue = (iso?: string | null) => (iso ? iso.slice(0, 16) : "");
 
-export function AdminCareersPage({ onNavigate, apiBase = "/api/admin" }: AdminPagesProps) {
-    // const [jobs, setJobs] = useState<AdminJob[]>([]);
-    const [loading, setLoading] = useState(false);
+const fetchJobs = async () => {
+    const res = await api.get("/career/all-job");
+    return res.data;
+}
+
+export function AdminCareersPage({ onNavigate }: AdminPagesProps) {
+    const { data = [], isLoading, isError, error } = useQuery<Job[]>({
+        queryKey: ['careers'],
+        queryFn: fetchJobs,
+        staleTime: 1000 * 60 * 2,
+        retry: 1,
+    });
+
     const [q, setQ] = useState("");
     const [dept, setDept] = useState<string>("all");
     const [status, setStatus] = useState<string>("all");
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editing, setEditing] = useState<AdminJob | null>(null);
-    const [form, setForm] = useState<AdminJob>({
+    const [editing, setEditing] = useState<Job | null>(null);
+    const [form, setForm] = useState<Job>({
         title: "",
         department: "Construction",
         location: "",
@@ -61,21 +70,9 @@ export function AdminCareersPage({ onNavigate, apiBase = "/api/admin" }: AdminPa
         description: "",
     });
 
-    const jobs: AdminJob[] = [
-        {
-            title: "Site Engineer (Roads)",
-            department: "Construction",
-            location: "Giridih, Jharkhand",
-            type: "Full-time",
-            experience: "2-5",
-            status: "Open",
-            postedOn: new Date().toISOString(),
-            highlights: ["AutoCAD", "QS", "QA/QC"],
-            description: "Execution oversight for urban road packages; quality and safety compliance.",
-        },
-    ]
+    const jobs = useMemo(() => data ?? [], [data]);
 
-    const openEdit = (job: AdminJob) => {
+    const openEdit = (job: Job) => {
         setEditing(job);
         setForm({ ...job });
         setIsModalOpen(true);
@@ -99,22 +96,13 @@ export function AdminCareersPage({ onNavigate, apiBase = "/api/admin" }: AdminPa
 
     const saveJob = async () => {
         try {
-            if (!form.title || !form.location) {
-                toast.error("Title and Location are required");
+            if (!form.title || !form.location || !form.description) {
+                toast.error("All fields are required");
                 return;
             }
-            const method = editing ? "PUT" : "POST";
-            const url = editing && editing._id ? `${apiBase}/jobs/${editing._id}` : `${apiBase}/jobs`;
-            const r = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
-            if (!r.ok) throw new Error("Save failed");
-            const saved = await r.json().catch(() => form);
-            if (editing) {
-                setJobs((prev) => prev.map((j) => (j._id === editing._id ? { ...j, ...form } : j)));
-                toast.success("Job updated");
-            } else {
-                setJobs((prev) => [{ ...form, _id: saved._id }, ...prev]);
-                toast.success("Job created");
-            }
+            const res = await api.post("/career/create-job", form);
+            console.log(res.data);
+
             setIsModalOpen(false);
         } catch (e: any) {
             toast.error(e.message || "Something went wrong");
@@ -130,7 +118,7 @@ export function AdminCareersPage({ onNavigate, apiBase = "/api/admin" }: AdminPa
                         <h1 className="text-3xl font-bold">Admin – Careers</h1>
                         <p className="text-muted-foreground mt-1">Create, update, and publish job openings.</p>
                     </div>
-                    <Button onClick={openCreate} className="bg-primary hover:bg-primary/90">
+                    <Button onClick={openCreate} className="bg-primary hover:bg-primary/90 cursor-pointer">
                         <Plus className="w-4 h-4 mr-2" /> New Job
                     </Button>
                 </div>
@@ -142,7 +130,7 @@ export function AdminCareersPage({ onNavigate, apiBase = "/api/admin" }: AdminPa
                     <TabsTrigger value="applications">Applications</TabsTrigger>
                 </TabsList>
                 <TabsContent value="openings">
-                    <AdminOpeningTable openEdit={(j)=>openEdit(j)} />
+                    <AdminOpeningTable jobs={jobs} openEdit={(j) => openEdit(j)} loading={isLoading} />
                 </TabsContent>
                 <TabsContent value="applications">
                     <AdminApplicationsTable apiBase="/api/admin" />
@@ -178,7 +166,7 @@ export function AdminCareersPage({ onNavigate, apiBase = "/api/admin" }: AdminPa
                             <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
                         </div>
                         <div>
-                            <Label>Type</Label>
+                            <Label>Type *</Label>
                             <Select value={form.type} onValueChange={(v: any) => setForm({ ...form, type: v })}>
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
@@ -189,7 +177,7 @@ export function AdminCareersPage({ onNavigate, apiBase = "/api/admin" }: AdminPa
                             </Select>
                         </div>
                         <div>
-                            <Label>Experience</Label>
+                            <Label>Experience *</Label>
                             <Select value={form.experience} onValueChange={(v: any) => setForm({ ...form, experience: v })}>
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
@@ -200,7 +188,7 @@ export function AdminCareersPage({ onNavigate, apiBase = "/api/admin" }: AdminPa
                             </Select>
                         </div>
                         <div>
-                            <Label>Status</Label>
+                            <Label>Status *</Label>
                             <Select value={form.status} onValueChange={(v: any) => setForm({ ...form, status: v })}>
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
@@ -210,16 +198,16 @@ export function AdminCareersPage({ onNavigate, apiBase = "/api/admin" }: AdminPa
                             </Select>
                         </div>
                         <div>
-                            <Label>Posted On</Label>
+                            <Label>Posted On *</Label>
                             <Input type="datetime-local" value={dateInputValue(form.postedOn)} onChange={(e) => setForm({ ...form, postedOn: new Date(e.target.value).toISOString() })} />
                         </div>
                         <div className="md:col-span-2">
-                            <Label>Description</Label>
+                            <Label>Description *</Label>
                             <Textarea rows={4} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
                         </div>
                         <div className="md:col-span-2">
                             <Label>Highlights (comma separated)</Label>
-                            <Input value={form.highlights.join(", ")} onChange={(e) => setForm({ ...form, highlights: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })} />
+                            <Input value={form.highlights} onChange={(e) => setForm({ ...form, highlights: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })} />
                         </div>
                     </div>
 
