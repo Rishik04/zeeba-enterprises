@@ -20,10 +20,11 @@ interface ProjectCardProps {
     footer: boolean | false,
     handleToggleStatus: (id: string, status: string) => void;
     getStatusBadge: (status: string) => void;
+    onEdit: (project: any) => void;
 }
 
 
-const ProjectCard = ({ project, status, footer, handleToggleStatus, getStatusBadge }: ProjectCardProps) => {
+const ProjectCard = ({ project, status, footer, handleToggleStatus, getStatusBadge, onEdit }: ProjectCardProps) => {
     const getTypeColor = (type: string) => {
         switch (type) {
             case 'Commercial': return 'bg-blue-100 text-blue-800';
@@ -86,7 +87,7 @@ const ProjectCard = ({ project, status, footer, handleToggleStatus, getStatusBad
                         </div>
                     </div>
                     {footer ? <div className="flex gap-2">
-                        <Button size="sm" variant="outline" onClick={() => console.log("edit")} className="hover:bg-cyan-600 cursor-pointer">
+                        <Button size="sm" variant="outline" onClick={() => onEdit(project)} className="hover:bg-cyan-600 cursor-pointer">
                             <Edit className="w-4 h-4" />
                         </Button>
                         <Button
