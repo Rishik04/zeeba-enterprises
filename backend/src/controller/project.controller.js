@@ -2,6 +2,7 @@ import express from "express";
 import {
   createProject,
   getAllProjects,
+  updateProjectDetails,
   updateProjectStatusById,
 } from "../services/project.service.js";
 import multer from "multer";
@@ -40,7 +41,7 @@ projectRouter.get("/all-project", async (req, res) => {
   }
 });
 
-projectRouter.post("/:id/update", async (req, res) => {
+projectRouter.post("/:id/update-status", async (req, res) => {
   try {
     const id = req.params.id;
     const { status } = req.body;
@@ -51,6 +52,31 @@ projectRouter.post("/:id/update", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+projectRouter.put(
+  "/update/:id",
+  upload.array("images", 6), // Allow up to 6 new images
+  async (req, res) => {
+    try {
+      const id = req.params.id;
+      const updates = req.body;
+
+      // Get paths of newly uploaded files
+      const newImagePaths = req.files ? req.files.map((file) => file.path) : [];
+
+      const updatedProject = await updateProjectDetails(
+        id,
+        updates,
+        newImagePaths
+      );
+
+      res.status(200).json(updatedProject);
+    } catch (error) {
+      console.error("Update Error:", error);
+      res.status(500).json({ error: "Server error while updating project" });
+    }
+  }
+);
 
 // export const getProjectByIdController = async (req, res) => {
 //   try {
