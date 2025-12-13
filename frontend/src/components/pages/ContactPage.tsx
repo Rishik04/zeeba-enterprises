@@ -144,6 +144,22 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
         <meta property="og:description" content="Reach out for contracting, engineering, logistics, pump works, and consulting services. Available Mon-Sat: 9AM–6PM." />
         <meta property="og:url" content="https://www.zebaenterprises.com/contact" />
         <meta property="og:image" content="https://www.zebaenterprises.com/og-image.jpg" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "Zeba Enterprises",
+            "url": "https://www.zebaenterprises.com/contact",
+            "telephone": "+91-9801359772",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Dhanbad",
+              "addressRegion": "Jharkhand",
+              "addressCountry": "IN"
+            },
+            "openingHours": "Mo-Sa 09:00-18:00"
+          })}
+        </script>
       </Helmet>
       <div className="min-h-screen">
         {/* Hero Section */}

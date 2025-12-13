@@ -116,6 +116,30 @@ export function HomePage({ onNavigate }: HomePageProps) {
         <meta property="og:image" content="https://www.zebaenterprises.com/og-image.jpg" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
+
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Zeba Enterprises",
+            "url": "https://www.zebaenterprises.com",
+            "logo": "https://www.zebaenterprises.com/logo.png",
+            "description":
+              "Zeba Enterprises is an Indian infrastructure and contracting company specializing in civil engineering, railway construction, road development, mining infrastructure, pipeline projects, and logistics services.",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Dhanbad",
+              "addressRegion": "Jharkhand",
+              "addressCountry": "IN"
+            },
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+91-9801359772",
+              "contactType": "customer service",
+              "areaServed": ["IN", "Jharkhand", "UP", "Bihar", "Odisha"]
+            }
+          })}
+        </script>
       </Helmet>
       <div className="min-h-screen">
         {/* Hero */}
