@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     Plus
 } from "lucide-react";
@@ -46,6 +46,7 @@ const fetchJobs = async () => {
 }
 
 export function AdminCareersPage({ onNavigate }: AdminPagesProps) {
+    const queryClient = useQueryClient();
     const { data = [], isLoading, isError, error } = useQuery<Job[]>({
         queryKey: ['careers'],
         queryFn: fetchJobs,
@@ -58,6 +59,7 @@ export function AdminCareersPage({ onNavigate }: AdminPagesProps) {
     const [status, setStatus] = useState<string>("all");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editing, setEditing] = useState<Job | null>(null);
+    const [highlightsInput, setHighlightsInput] = useState("");
     const [form, setForm] = useState<Job>({
         title: "",
         department: "Construction",
@@ -76,6 +78,7 @@ export function AdminCareersPage({ onNavigate }: AdminPagesProps) {
         setEditing(job);
         setForm({ ...job });
         setIsModalOpen(true);
+        setHighlightsInput(job.highlights.join(", "));
     };
 
     const openCreate = () => {
@@ -91,6 +94,7 @@ export function AdminCareersPage({ onNavigate }: AdminPagesProps) {
             highlights: [],
             description: "",
         });
+        setHighlightsInput("");
         setIsModalOpen(true);
     };
 
@@ -100,9 +104,19 @@ export function AdminCareersPage({ onNavigate }: AdminPagesProps) {
                 toast.error("All fields are required");
                 return;
             }
-            const res = await api.post("/career/create-job", form);
-            console.log(res.data);
+            const payload = {
+                ...form,
+                highlights: highlightsInput.split(",").map(s => s.trim()).filter(Boolean)
+            };
 
+            if (editing && editing._id) {
+                await api.put(`/career/update-job/${editing._id}`, payload);
+                toast.success("Job updated successfully");
+            } else {
+                await api.post("/career/create-job", payload);
+                toast.success("Job created successfully");
+            }
+            await queryClient.invalidateQueries({ queryKey: ['careers'] });
             setIsModalOpen(false);
         } catch (e: any) {
             toast.error(e.message || "Something went wrong");
@@ -207,7 +221,7 @@ export function AdminCareersPage({ onNavigate }: AdminPagesProps) {
                         </div>
                         <div className="md:col-span-2">
                             <Label>Highlights (comma separated)</Label>
-                            <Input value={form.highlights} onChange={(e) => setForm({ ...form, highlights: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })} />
+                            <Input value={highlightsInput} onChange={(e) => setHighlightsInput(e.target.value)} />
                         </div>
                     </div>
 

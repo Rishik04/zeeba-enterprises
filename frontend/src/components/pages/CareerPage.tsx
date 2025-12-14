@@ -26,12 +26,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 
 // Reuse existing assets from your project (swap if needed)
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet-async";
 import { api } from "../../App.tsx";
-import onsite from "../../assets/road4.jpeg";
 import noData from "../../assets/no-data.png";
+import onsite from "../../assets/road4.jpeg";
 import banner from "../../assets/site1.jpeg";
 import { ApplyModal, UploadResumeModal } from "../ApplyForm.tsx";
-import { Helmet } from "react-helmet-async";
 
 interface CareersPageProps {
     onNavigate: (page: string) => void;
@@ -47,6 +47,7 @@ interface Job {
     postedOn: string; // ISO date
     highlights: string[];
     description: string;
+    status: "Open" | "Close";
     icon?: React.ComponentType<any>;
 }
 
@@ -81,14 +82,17 @@ export function CareersPage({ onNavigate }: CareersPageProps) {
     const [experience, setExperience] = useState<string>("all");
     const [sort, setSort] = useState<string>("recent");
     const [applyOpen, setApplyOpen] = useState(false);
-    const [selectedJob, setSelectedJob] = useState<string | undefined>(undefined);
+    const [selectedJob, setSelectedJob] = useState<Job | {}>({});
     const [uploadOpen, setUploadOpen] = useState(false);
 
     const jobsMemo = useMemo(() => data ?? [], [data]);
 
+    console.log(selectedJob)
+
 
     const filtered = useMemo(() => {
         let list = [...jobsMemo];
+        list = list.filter((j) => j.status === "Open");
         if (q.trim()) {
             const qq = q.toLowerCase();
             list = list.filter((j) =>
@@ -348,8 +352,8 @@ export function CareersPage({ onNavigate }: CareersPageProps) {
                                                                     ))}
                                                                 </div>
                                                                 <div className="flex justify-between items-center pt-2">
-                                                                    <Button onClick={() => { setSelectedJob(job.title); setApplyOpen(true); }}>Apply Now</Button>
-                                                                    <ApplyModal open={applyOpen} onOpenChange={setApplyOpen} jobTitle={selectedJob} />
+                                                                    <Button onClick={() => { setSelectedJob(job); setApplyOpen(true); }}>Apply Now</Button>
+                                                                    <ApplyModal open={applyOpen} onOpenChange={setApplyOpen} jobId={selectedJob._id} jobTitle={selectedJob.title} />
                                                                     <Button variant="outline" className="cursor-pointer" onClick={() => onNavigate("contact")}>Refer a Candidate</Button>
                                                                 </div>
                                                             </CardContent>

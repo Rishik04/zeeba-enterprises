@@ -30,7 +30,7 @@ export interface AdminJob {
 
 export type Sector = "Roads" | "Railways" | "Water" | "Buildings" | "Mining";
 
-export function AdminOpeningTable({ apiBase = "/api/admin", openEdit, jobs }: { apiBase?: string, openEdit: any, jobs:AdminJob }) {
+export function AdminOpeningTable({ apiBase = "/api/admin", openEdit, jobs }: { apiBase?: string, openEdit: any, jobs: AdminJob }) {
     // const [jobs, setJobs] = useState<AdminJob[]>([]);
     const [loading, setLoading] = useState(false);
     const [q, setQ] = useState("");
@@ -50,20 +50,6 @@ export function AdminOpeningTable({ apiBase = "/api/admin", openEdit, jobs }: { 
         description: "",
     });
 
-    // const jobs: AdminJob[] = [
-    //     {
-    //         title: "Site Engineer (Roads)",
-    //         department: "Construction",
-    //         location: "Giridih, Jharkhand",
-    //         type: "Full-time",
-    //         experience: "2-5",
-    //         status: "Open",
-    //         postedOn: new Date().toISOString(),
-    //         highlights: ["AutoCAD", "QS", "QA/QC"],
-    //         description: "Execution oversight for urban road packages; quality and safety compliance.",
-    //     },
-    // ]
-    
     const filtered = useMemo(() => {
         let list = [...jobs];
         if (q.trim()) {
@@ -144,26 +130,34 @@ export function AdminOpeningTable({ apiBase = "/api/admin", openEdit, jobs }: { 
                             </tr>
                         </thead>
                         <tbody>
-                            {filtered.map((j, i) => (
-                                <tr key={(j._id || i) + j.title} className="border-t">
-                                    <td className="py-3 pr-4">
-                                        <div className="font-medium">{j.title}</div>
-                                        <div className="text-gray-500 line-clamp-1">{j.description}</div>
-                                    </td>
-                                    <td className="py-3 pr-4"><Badge variant="outline"><Building2 className="w-4 h-4 mr-1" /> {j.department}</Badge></td>
-                                    <td className="py-3 pr-4"><Badge variant="outline"><MapPin className="w-4 h-4 mr-1" /> {j.location}</Badge></td>
-                                    <td className="py-3 pr-4">{j.type}</td>
-                                    <td className="py-3 pr-4">{j.experience}</td>
-                                    <td className="py-3 pr-4">{j.status === "Open" ? <Badge className="bg-green-50 text-green-700 border-green-200">Open</Badge> : <Badge variant="secondary">Closed</Badge>}</td>
-                                    <td className="py-3 pr-4">{new Date(j.postedOn).toLocaleDateString()}</td>
-                                    <td className="py-3 pr-0">
-                                        <div className="flex justify-end gap-2">
-                                            <Button size="sm" variant="outline" onClick={() => openEdit(j)}><Edit className="w-4 h-4" /></Button>
-                                            <Button size="sm" variant="outline" onClick={() => removeJob(j)}><Trash2 className="w-4 h-4" /></Button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                            {filtered.map((j, i) => {
+                                return (
+
+                                    <tr key={(j._id || i) + j.title} className="border-t">
+                                        <td className="py-3 pr-4">
+                                            <div className="font-medium">{j.title}</div>
+                                            <div className="text-gray-500 line-clamp-1">{j.description}</div>
+                                            <div className="text-gray-500 line-clamp-1">
+                                                {j.highlights.map((h) => (
+                                                    <Badge key={h} className="bg-cyan-50 mr-2 my-1 text-cyan-700 border-cyan-200">{h}</Badge>
+                                                ))}
+                                            </div>
+                                        </td>
+                                        <td className="py-3 pr-4"><Badge variant="outline"><Building2 className="w-4 h-4 mr-1" /> {j.department}</Badge></td>
+                                        <td className="py-3 pr-4"><Badge variant="outline"><MapPin className="w-4 h-4 mr-1" /> {j.location}</Badge></td>
+                                        <td className="py-3 pr-4">{j.type}</td>
+                                        <td className="py-3 pr-4">{j.experience}</td>
+                                        <td className="py-3 pr-4">{j.status === "Open" ? <Badge className="bg-green-50 text-green-700 border-green-200">Open</Badge> : <Badge variant="secondary">Closed</Badge>}</td>
+                                        <td className="py-3 pr-4">{new Date(j.postedOn).toLocaleDateString()}</td>
+                                        <td className="py-3 pr-0">
+                                            <div className="flex justify-end gap-2">
+                                                <Button size="sm" variant="outline" onClick={() => openEdit(j)}><Edit className="w-4 h-4" /></Button>
+                                                <Button size="sm" variant="outline" onClick={() => removeJob(j)}><Trash2 className="w-4 h-4" /></Button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
                             {filtered.length === 0 && (
                                 <tr>
                                     <td colSpan={8} className="text-center py-10 text-gray-500">No jobs found</td>
