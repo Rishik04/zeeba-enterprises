@@ -26,6 +26,7 @@ import { Label } from '../../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import { Textarea } from '../../ui/textarea';
+import { useQueryClient } from '@tanstack/react-query';
 
 const API_URL = import.meta.env.VITE_API_PUBLIC_URL;
 
@@ -55,7 +56,7 @@ interface Project {
 }
 
 export function DashboardPage({ onNavigate, validate }: DashboardPageProps) {
-
+  const queryClient = useQueryClient();
   const [currentProjects, setCurrentProjects] = useState([]);
   const [completedProjects, setCompletedProjects] = useState([]);
   const [upcomingProjects, setUpcomingProjects] = useState([]);
@@ -170,7 +171,7 @@ export function DashboardPage({ onNavigate, validate }: DashboardPageProps) {
 
       const created = res.data;
       setProjects(prev => [created, ...prev]);
-
+      await queryClient.invalidateQueries({ queryKey: ['projects'] });
       toast.success('Project added successfully');
       resetForm();
       previewUrls.forEach(url => URL.revokeObjectURL(url));
@@ -309,6 +310,7 @@ export function DashboardPage({ onNavigate, validate }: DashboardPageProps) {
 
       const updatedProject = res.data;
       setProjects(prev => prev.map(p => p._id === editingProject._id ? updatedProject : p));
+      await queryClient.invalidateQueries({ queryKey: ['projects'] });
       toast.success("Project updated successfully");
       setIsEditDialogOpen(false);
       setEditingProject(null);

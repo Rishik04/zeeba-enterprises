@@ -15,6 +15,7 @@ import { Progress } from "./ui/progress"; // If not available, replace with a si
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 import { ResumeDropzone } from "./ResumeDragAndDrop";
+import { api } from "../App";
 
 // ---- Types ----
 export type ApplyFormData = {
@@ -46,15 +47,15 @@ const PHONE_RE = /^(\+?\d[\d\s-]{7,15})$/;
 export function ApplyModal({
   open,
   onOpenChange,
+  jobId,
   jobTitle,
   onSubmit,
-  endpoint = "/api/careers/apply",
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  jobId?: string;
   jobTitle?: string;
   onSubmit?: (data: ApplyFormData) => Promise<void> | void;
-  endpoint?: string; // POST endpoint (FormData)
 }) {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -92,7 +93,7 @@ export function ApplyModal({
       setProgress(10);
 
       const fd = new FormData();
-      if (jobTitle) fd.append("jobTitle", jobTitle);
+      if (jobId) fd.append("jobId", jobId);
       Object.entries(data).forEach(([k, v]) => {
         if (k === "resume") return;
         if (typeof v === "string") fd.append(k, v);
@@ -104,16 +105,15 @@ export function ApplyModal({
         await Promise.resolve(onSubmit(data));
       }
 
-      // Default network call (can be removed if you handle onSubmit)
-      const res = await fetch(endpoint, { method: "POST", body: fd });
+      const res = await api.post(`career/apply/${jobId}`, fd);
+
       setProgress(70);
-      if (!res.ok) throw new Error("Failed to submit application");
+      if (!res.data) throw new Error("Failed to submit application");
 
       setProgress(100);
       toast.success("Application submitted successfully");
-      onOpenChange(false);
-      // reset
       setTimeout(() => setProgress(0), 300);
+      onOpenChange(false);
       setData({
         name: "",
         email: "",
