@@ -53,7 +53,8 @@ interface Job {
 
 const fetchJobs = async () => {
     const res = await api.get("/career/all-job");
-    return res.data;
+    const list = res.data.filter((j) => j.status === "Open");
+    return list;
 }
 
 function safeIcon(icon?: Job["icon"]) {
@@ -87,12 +88,8 @@ export function CareersPage({ onNavigate }: CareersPageProps) {
 
     const jobsMemo = useMemo(() => data ?? [], [data]);
 
-    console.log(selectedJob)
-
-
     const filtered = useMemo(() => {
         let list = [...jobsMemo];
-        list = list.filter((j) => j.status === "Open");
         if (q.trim()) {
             const qq = q.toLowerCase();
             list = list.filter((j) =>
