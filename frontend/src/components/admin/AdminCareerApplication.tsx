@@ -66,42 +66,6 @@ export function AdminApplicationsTable({ apiBase = "/api/admin" }: { apiBase?: s
     },
   ]
 
-  // useEffect(() => {
-  //   const load = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const r = await fetch(`${apiBase}/applications`);
-  //       if (r.ok) {
-  //         const data = await r.json();
-  //         setApps(Array.isArray(data) ? data : []);
-  //       } else {
-  //         // Seed sample if API not ready
-  //         setApps([
-  //           {
-  //             jobTitle: "Site Engineer (Roads)",
-  //             name: "Aman Verma",
-  //             email: "aman@example.com",
-  //             phone: "+91 98765 43210",
-  //             location: "Ranchi",
-  //             experience: "2-5",
-  //             expectedCtc: "5.5 LPA",
-  //             notice: "30 days",
-  //             coverLetter: "I have handled WMM, DBM and PQC packages on NH projects...",
-  //             resumeUrl: "/files/sample-resume.pdf",
-  //             status: "New",
-  //             appliedOn: new Date().toISOString(),
-  //           },
-  //         ]);
-  //       }
-  //     } catch (e) {
-  //       setApps([]);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   load();
-  // }, [apiBase]);
-
   const jobOptions = useMemo(() => {
     const set = new Set(apps.map((a) => a.jobTitle).filter(Boolean));
     return ["all", ...Array.from(set)];

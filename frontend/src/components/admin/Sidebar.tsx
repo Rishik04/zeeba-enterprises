@@ -51,10 +51,10 @@ export default function AdminSidebar({ onNavigate, active = "dashboard" }: Sideb
             {/* Mobile top bar */}
             <div className="lg:hidden sticky top-0 z-40 bg-white border-b">
                 <div className="px-4 h-14 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    {/* <div className="flex items-center gap-2">
                         <Building2 className="w-5 h-5 text-cyan-600" />
                         <span className="font-semibold">Zeba Admin</span>
-                    </div>
+                    </div> */}
                     <Button variant="ghost" size="icon" onClick={() => setOpen((v) => !v)}>
                         {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                     </Button>
