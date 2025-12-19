@@ -49,14 +49,10 @@ export default function AdminSidebar({ onNavigate, active = "dashboard" }: Sideb
     return (
         <>
             {/* Mobile top bar */}
-            <div className="lg:hidden sticky top-0 z-40 bg-white border-b">
+            <div className="lg:hidden fixed top-0 w-full z-40 bg-white border-b">
                 <div className="px-4 h-14 flex items-center justify-between">
-                    {/* <div className="flex items-center gap-2">
-                        <Building2 className="w-5 h-5 text-cyan-600" />
-                        <span className="font-semibold">Zeba Admin</span>
-                    </div> */}
-                    <Button variant="ghost" size="icon" onClick={() => setOpen((v) => !v)}>
-                        {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                    <Button variant="ghost" size="icon" className="hover:bg-cyan-600" onClick={() => setOpen((v) => !v)}>
+                        {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5 fixed" />}
                     </Button>
                 </div>
             </div>
@@ -64,8 +60,8 @@ export default function AdminSidebar({ onNavigate, active = "dashboard" }: Sideb
             {/* Sidebar */}
             <aside
                 className={cn(
-                    "fixed lg:static inset-y-0 left-0 z-40 w-72 bg-white border-r lg:translate-x-0 transition-transform",
-                    open ? "translate-x-10" : "-translate-x-full lg:translate-x-0"
+                    "fixed lg:static inset-y-0 left-0 z-40 w-72 bg-white lg:translate-x-0 transition-transform",
+                    open ? "translate-x-0 top-10" : "-translate-x-full lg:translate-x-0"
                 )}
             >
 

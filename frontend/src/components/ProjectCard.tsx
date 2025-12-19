@@ -102,7 +102,7 @@ const ProjectCard = ({ project, status, footer, handleToggleStatus, getStatusBad
                 </div>
             </CardHeader>
             <CardContent>
-                <p className="text-gray-600 mb-4 h-16">{project.description}</p>
+                <p className="text-gray-600 mb-4">{project.description}</p>
 
                 <div className="space-y-2 mb-4">
                     {status === "ongoing" ? <div className="mt-3">
