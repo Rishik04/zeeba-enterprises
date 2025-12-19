@@ -128,18 +128,20 @@ export function AdminCareersPage({ onNavigate }: AdminPagesProps) {
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
             <section className="bg-white border-b">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-between">
-                    <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <h1 className="text-3xl font-bold">Admin – Careers</h1>
-                        <p className="text-muted-foreground mt-1">Create, update, and publish job openings.</p>
-                    </motion.div>
-                    <Button onClick={openCreate} className="bg-primary hover:bg-primary/90 cursor-pointer">
-                        <Plus className="w-4 h-4 mr-2" /> New Job
-                    </Button>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div className="flex justify-between items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            <h1 className="text-3xl font-bold">Admin – Careers</h1>
+                            <p className="text-muted-foreground mt-1">Create, update, and publish job openings.</p>
+                        </motion.div>
+                        <Button onClick={openCreate} className="bg-primary hover:bg-primary/90 cursor-pointer">
+                            <Plus className="w-4 h-4 mr-2" /> New Job
+                        </Button>
+                    </div>
                 </div>
             </section>
             <section className="py-8">

@@ -41,18 +41,13 @@ interface Project {
   title: string;
   description: string;
   location: string;
-  budget: string | null;
-  timeline: string | null;
   status: 'ongoing' | 'upcoming' | 'completed';
   type: string;
-  team: number | null;
-  completion: number | null;
   startDate: string | null;
-  estimatedEnd: string | null;
+  completionDate: string | null;
   image: string[];
   features: string[];
   value: string;
-  completionDate: string;
 }
 
 export function DashboardPage({ onNavigate, validate }: DashboardPageProps) {
@@ -337,12 +332,29 @@ export function DashboardPage({ onNavigate, validate }: DashboardPageProps) {
     }
   };
 
+  const parseBudget = (value: string): number => {
+    if (!value) return 0;
+
+    const cleaned = value.replace(/[₹,\s]/g, "").toLowerCase();
+
+    if (cleaned.includes("cr")) {
+      return parseFloat(cleaned);
+    }
+
+    if (cleaned.includes("lakh")) {
+      return parseFloat(cleaned) / 100;
+    }
+
+    return parseFloat(cleaned) || 0;
+  };
+
+
   const stats = {
     total: projects.length,
     ongoing: projects.filter(p => p.status === 'ongoing').length,
     upcoming: projects.filter(p => p.status === 'upcoming').length,
     completed: projects.filter(p => p.status === 'completed').length,
-    totalBudget: 0
+    totalBudget: projects.reduce((sum, p) => sum + parseBudget(p.value), 0)
   };
 
 
@@ -542,7 +554,7 @@ export function DashboardPage({ onNavigate, validate }: DashboardPageProps) {
                             <Label>Value</Label>
                             <div className="relative mt-1">
                               <IndianRupee className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                              <Input value={editProject.value} onChange={(e) => setEditProject({ ...editProject, value: e.target.value })} className="pl-10" />
+                              <Input value={editProject?.value ?? "0 Cr"} onChange={(e) => setEditProject({ ...editProject, value: e.target.value })} className="pl-10" />
                             </div>
                           </div>
                         </div>
@@ -667,7 +679,7 @@ export function DashboardPage({ onNavigate, validate }: DashboardPageProps) {
               <Card className="enterprise-shadow"><CardContent className="p-6"><div className="flex items-center justify-between"><div><p className="text-muted-foreground text-sm">Completed</p><p className="text-2xl font-bold text-gray-600">{stats.completed}</p></div><CheckCircle className="w-8 h-8 text-gray-600" /></div></CardContent></Card>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}>
-              <Card className="enterprise-shadow"><CardContent className="p-6"><div className="flex items-center justify-between"><div><p className="text-muted-foreground text-sm">Total Budget</p><p className="text-2xl font-bold text-primary">₹{stats.totalBudget.toFixed(0)}K Cr</p></div><IndianRupee className="w-8 h-8 text-primary" /></div></CardContent></Card>
+              <Card className="enterprise-shadow"><CardContent className="p-6"><div className="flex items-center justify-between"><div><p className="text-muted-foreground text-sm">Total Budget</p><p className="text-2xl font-bold text-primary">₹{stats.totalBudget.toFixed(0)} Cr</p></div><IndianRupee className="w-8 h-8 text-primary" /></div></CardContent></Card>
             </motion.div>
           </div>
         </div>
