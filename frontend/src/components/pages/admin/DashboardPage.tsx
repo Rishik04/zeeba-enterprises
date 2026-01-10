@@ -554,7 +554,7 @@ export function DashboardPage({ onNavigate, validate }: DashboardPageProps) {
                             <Label>Value</Label>
                             <div className="relative mt-1">
                               <IndianRupee className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                              <Input value={editProject?.value ?? "0 Cr"} onChange={(e) => setEditProject({ ...editProject, value: e.target.value })} className="pl-10" />
+                              <Input value={editProject?.value ?? "0 Cr"} onChange={(e) => setEditProject({ ...editProject, value: e.target.value ?? "0 Cr" })} className="pl-10" />
                             </div>
                           </div>
                         </div>
